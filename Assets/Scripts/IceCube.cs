@@ -11,7 +11,7 @@ public class IceCube : BaseObject
 	void Awake () 
 	{
 		Color original = renderer.material.color;
-		renderer.material.color = new Color (original.r, original.g, original.b, Random.Range (.25f, 1f));
+		renderer.material.color = new Color (original.r, original.g, original.b, Random.Range (.5f, 1f));
 	}
 	
 	// Update is called once per frame

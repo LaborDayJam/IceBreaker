@@ -9,8 +9,6 @@ public class BaseObject : MonoBehaviour {
 	{
 		health -= damage;
 		if (health <= 0) {
-			Debug.Log("I shoudl be destroyed");
-		
 			Destroy (gameObject);
 		}
 	}

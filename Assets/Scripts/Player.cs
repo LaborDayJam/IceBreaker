@@ -3,15 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 public class Player : BaseObject {
 
-	List<Action> actions;
+	//List<Action> actions;
 
 	public Action currentAction;
 
+	HitAction hitAction;
+	ShootAction shootAction;
+
 	void Awake()
 	{
-		actions = new List<Action> ();
-		currentAction = gameObject.AddComponent<HitAction>();
-		actions.Add (currentAction);
+		//actions = new List<Action> ();
+		hitAction = gameObject.AddComponent<HitAction>();
+		shootAction = gameObject.AddComponent<ShootAction> ();
+		//actions.Add (currentAction);
 
 	}
 
@@ -22,6 +26,17 @@ public class Player : BaseObject {
 	
 	// Update is called once per frame
 	void Update () {
+		HandleInput ();
+	
+	}
+
+	void HandleInput()
+	{
+		if (Input.GetKeyDown (KeyCode.Alpha1)) {
+			currentAction = hitAction;
+		} else if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			currentAction = shootAction;
+		}
 
 		switch(currentAction.type)
 		{
@@ -39,9 +54,8 @@ public class Player : BaseObject {
 			
 		}break;
 		default:
-
+			
 			break;
 		}
 	}
-
 }

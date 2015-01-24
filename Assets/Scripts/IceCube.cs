@@ -1,19 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class IceCube : MonoBehaviour 
+public class IceCube : BaseObject 
 {
+	public int index;
+	bool isBreakable = true;
 
-	private GameObject iceContainer;
+
 	// Use this for initialization
 	void Awake () 
 	{
-		this.transform.parent = GameObject.FindGameObjectWithTag("Container").GetComponent<Transform>();
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
+		Color original = renderer.material.color;
+		renderer.material.color = new Color (original.r, original.g, original.b, Random.Range (.5f, 1f));
 	}
 }

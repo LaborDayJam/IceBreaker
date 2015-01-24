@@ -15,6 +15,7 @@ public class Player : BaseObject {
 		//actions = new List<Action> ();
 		hitAction = gameObject.AddComponent<HitAction>();
 		shootAction = gameObject.AddComponent<ShootAction> ();
+		currentAction = hitAction;
 		//actions.Add (currentAction);
 
 	}

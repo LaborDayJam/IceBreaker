@@ -39,8 +39,5 @@ public class Level : MonoBehaviour {
 	{
 		return map[index];
 	}
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

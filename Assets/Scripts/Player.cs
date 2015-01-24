@@ -3,32 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 public class Player : BaseObject {
 
-	//List<Action> actions;
-
+	//Actions
 	public Action currentAction;
-
 	HitAction hitAction;
 	ShootAction shootAction;
 
+	//Team
+	public int team;
+	public int playerName;
+
+	public int totalPoints;
+
 	void Awake()
 	{
-		//actions = new List<Action> ();
 		hitAction = gameObject.AddComponent<HitAction>();
 		shootAction = gameObject.AddComponent<ShootAction> ();
 		currentAction = hitAction;
-		//actions.Add (currentAction);
-
 	}
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
 	// Update is called once per frame
 	void Update () {
 		HandleInput ();
-	
 	}
 
 	void HandleInput()
@@ -58,5 +53,11 @@ public class Player : BaseObject {
 			
 			break;
 		}
+	}
+
+	public void ScorePoints(int points)
+	{
+		totalPoints += points;
+		Debug.Log (totalPoints);
 	}
 }

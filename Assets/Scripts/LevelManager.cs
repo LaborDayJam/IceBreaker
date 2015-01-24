@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LevelManager : MonoBehaviour 
+public class MapCreator : MonoBehaviour 
 {
 	public GameObject iceblock;
 
 	// Use this for initialization
 	void Awake () 
 	{
-		LevelGenerator();
+		MapCreationa();
 	}
 
-	void LevelGenerator()
+	void MapCreation()
 	{
 		for(int y = 0; y < 10; y++)
 			for(int x = 0; x < 20; x++)

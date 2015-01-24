@@ -4,6 +4,7 @@ using System.Collections;
 public enum ACTION_TYPE {ONCE, CONTINOUS, SIZE};
 public class Action : MonoBehaviour {
 
+	public string actionName;
 	public ACTION_TYPE type; 
 	public float range = 1;
 	public float rateOfFire = .5f;

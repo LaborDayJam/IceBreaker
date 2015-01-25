@@ -41,6 +41,8 @@ public class Player : BaseObject {
 
 	bool isPerformActioning = false;
 
+	public Animator characterAnimations;
+
 	void Awake()
 	{
 		hitAction = gameObject.AddComponent<HitAction>();

@@ -52,24 +52,40 @@ public class Level : MonoBehaviour {
 
 	void SpawnCollectables()
 	{
+		IceCube tempCubeRef;
 		for(int i = 0; i < max_collectables; i++)
 		{
+			tempCubeRef = null;
 			GameObject collectablePrefab = prefabCollectables[Random.Range(0, prefabCollectables.Length)];
-			Vector3 position = getCubeAtIndex(Random.Range(0, width * height * depth)).transform.position;
+			while(tempCubeRef == null || tempCubeRef.isOccupied)
+			{
+				tempCubeRef = getCubeAtIndex(Random.Range(0, width * height * depth));
+			}
+			Vector3 position = tempCubeRef.transform.position;
 			GameObject collectable = Instantiate(collectablePrefab, position, Quaternion.identity) as GameObject;
 			collectable.transform.parent = transform;
 			collectables.Add(collectable.GetComponent<Collectable>());
+
+			tempCubeRef.isOccupied = true;
 		}
 	}
 
 	void SpawnCarts()
 	{
+		IceCube tempCubeRef;
 		for(int i = 0; i < cart_count; i++)
 		{
-			Vector3 position = getCubeAtIndex(Random.Range(0, width * height * depth)).transform.position;
+			tempCubeRef = null;		
+			while(tempCubeRef == null || tempCubeRef.isOccupied)
+			{
+				tempCubeRef = getCubeAtIndex(Random.Range(0, width * height * depth));
+			}
+			Vector3 position = tempCubeRef.transform.position;
 			GameObject cart = Instantiate(prefabCart, position, Quaternion.identity) as GameObject;
 			cart.transform.parent = transform;
 			carts.Add(cart.GetComponent<Collector>());
+
+			tempCubeRef.isOccupied = true;
 		}
 	}
 

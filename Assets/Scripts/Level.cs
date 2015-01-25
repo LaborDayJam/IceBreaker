@@ -26,22 +26,16 @@ public class Level : MonoBehaviour {
 
 	void GenerateMap()
 	{
-<<<<<<< HEAD
+
 		GameObject iceCube;
-=======
 		float cubeSize = prefabIceCube.transform.localScale.x;
 		Debug.Log (cubeSize);
->>>>>>> dc064673703e04cdf77ee8456b654fe596864e50
 		int index = 0;
 		for (int z = 0; z < depth; z++) {
 			for (int y = 0; y < height; y++){
 				for (int x = 0; x < width; x++) {
 					index = x + y * width + z * (width * height);
-<<<<<<< HEAD
-					iceCube = Instantiate(prefabIceCube, new Vector3(x, y, z), Quaternion.identity) as GameObject;
-=======
-					GameObject iceCube = Instantiate(prefabIceCube, new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity) as GameObject;
->>>>>>> dc064673703e04cdf77ee8456b654fe596864e50
+					iceCube = Instantiate(prefabIceCube, new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity) as GameObject;
 					iceCube.GetComponent<IceCube>().index = index;
 					map.Add(iceCube.GetComponent<IceCube>());
 					iceCube.transform.parent = transform;

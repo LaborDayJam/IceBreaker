@@ -69,4 +69,21 @@ public class GameModeCollect : GameMode {
 		GameOver();
 	}
 
+	public override void PlayerFell(Player player)
+	{
+		Debug.Log(player.name + " fell ");
+		StartCoroutine (CR_Respawn (player));
+	}
+
+	
+	IEnumerator CR_Respawn(Player player)
+	{
+		Camera playerCam = player.GetComponentInChildren<Camera> ();
+		playerCam.enabled = false;
+
+		yield return new WaitForSeconds (6);
+		playerCam.enabled = true;
+		player.transform.position = level.FindRespawnPosition ();
+	}
+
 }

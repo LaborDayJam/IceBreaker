@@ -16,7 +16,7 @@ public class GameModeCombat : GameMode {
 		}
 	}
 
-	public void PlayerFell(Player player)
+	public override void PlayerFell(Player player)
 	{
 		GameOver();
 		

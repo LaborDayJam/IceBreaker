@@ -15,13 +15,20 @@ public class Level : MonoBehaviour {
 	public GameObject[] prefabCollectables;
 	public int max_collectables = 10;
 
+	public GameObject prefabCart;
+	public List<Collector> carts;
+	public int cart_count = 3;
+
+
 	// Use this for initialization
 	void Start () 
 	{
 		map = new List<IceCube>();
 		collectables = new List<Collectable> ();
+		carts = new List<Collector>();
 		GenerateMap ();
 		SpawnCollectables();
+		SpawnCarts ();
 	}
 
 	void GenerateMap()
@@ -51,6 +58,17 @@ public class Level : MonoBehaviour {
 			GameObject collectable = Instantiate(collectablePrefab, position, Quaternion.identity) as GameObject;
 			collectable.transform.parent = transform.parent;
 			collectables.Add(collectable.GetComponent<Collectable>());
+		}
+	}
+
+	void SpawnCarts()
+	{
+		for(int i = 0; i < cart_count; i++)
+		{
+			Vector3 position = getCubeAtIndex(Random.Range(0, width * height * depth)).transform.position;
+			GameObject cart = Instantiate(prefabCart, position, Quaternion.identity) as GameObject;
+			cart.transform.parent = transform.parent;
+			carts.Add(cart.GetComponent<Collector>());
 		}
 	}
 

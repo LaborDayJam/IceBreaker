@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
+public enum Player_Input_Type{PC, GAMEPAD, SIZE};
 public class Player : BaseObject {
 
 	int STATE_NORMAL = 0;
@@ -9,10 +11,21 @@ public class Player : BaseObject {
 
 	float stunDuration = 1.5f;
 
+	public Camera cam;
+
 	//Actions
 	public Action currentAction;
 	HitAction hitAction;
 	ShootAction shootAction;
+
+	//Input
+	public Player_Input_Type inputType;
+	public string moveX;
+	public string moveY;
+	public string lookX;
+	public string lookY;
+	public string switchAction;
+	public string performAction;
 
 	//Team
 	public int team;
@@ -26,14 +39,26 @@ public class Player : BaseObject {
 	public FPSWalkerEnhanced controller;
 	public int playerNum;
 
+	bool isPerformActioning = false;
 
 	void Awake()
 	{
 		hitAction = gameObject.AddComponent<HitAction>();
 		shootAction = gameObject.AddComponent<ShootAction> ();
 		currentAction = hitAction;
+		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
+void Start()
+{
+	InputManager.Instance.AssignControls(this, inputType);
+
+	if(inputType == Player_Input_Type.PC)
+	{
+		cam.GetComponent<MouseLook>().enabled = false;
+	}
+	//Debug.Log (Input.GetJoystickNames().Length);
+}
 	// Update is called once per frame
 	void Update () {
 		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
@@ -46,37 +71,64 @@ public class Player : BaseObject {
 				playerNum = 2;
 			}
 		}
-
-
 		HandleInput ();
-		Debug.Log (Input.GetJoystickNames().Length);
 	}
 
 	void HandleInput()
 	{
-		if ((Input.GetKeyDown (KeyCode.Alpha1) || (Input.GetButtonDown("Y"+playerNum)) && currentAction == shootAction) ) {
-			currentAction = hitAction;
-			print ("changing player " + playerNum + " to  hit");
+		switch(inputType)
+		{
+			case Player_Input_Type.PC:
+			{
+				if(Input.GetKeyDown (KeyCode.Alpha1))
+					currentAction = hitAction;
 
-		} else if ((Input.GetKeyDown (KeyCode.Alpha2) || (Input.GetButtonDown("Y"+playerNum)) && currentAction == hitAction)) {
-			currentAction = shootAction;
-			print ("changing player " + playerNum + " to  shooting");
+				 if (Input.GetKeyDown (KeyCode.Alpha2))
+				 	currentAction = shootAction;
+
+			 	if(Input.GetMouseButton(0))
+				 	isPerformActioning = true;
+				else
+					isPerformActioning = false;
+			}break;
+			case Player_Input_Type.GAMEPAD:
+			{
+				if (Input.GetButtonDown(switchAction) && currentAction == shootAction) {
+					currentAction = hitAction;
+					print ("changing player " + playerNum + " to  hit");
+
+				} else if (Input.GetButtonDown(switchAction) && currentAction == hitAction) {
+					currentAction = shootAction;
+					print ("changing player " + playerNum + " to  shooting");
+				}
+				if(Input.GetButtonDown(performAction) && currentAction == shootAction)
+					isPerformActioning = true;
+				else if(Input.GetButton(performAction)&& currentAction == hitAction){
+					isPerformActioning = true;
+				
+				}
+				else{
+					isPerformActioning = false;
+				}
+		
+			}break;
+			default:
+			break;
 		}
+
+		if(!isPerformActioning)
+
+			return;
 
 		switch(currentAction.type)
 		{
 		case ACTION_TYPE.ONCE:
 		{
-			if(Input.GetButtonDown(actionButton))
-			{
-				print ("doing action");
-				currentAction.Do();
-			}
+			currentAction.Do();
 		}break;
 		case ACTION_TYPE.CONTINOUS:
 		{
-			if(Input.GetButtonDown(actionButton))
-				currentAction.Do();
+			currentAction.Do();
 		}break;
 		default:
 			break;

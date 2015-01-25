@@ -32,46 +32,33 @@ public class MouseLook : MonoBehaviour {
 	float rotationY = 0F;
 	public string vertical = "Mouse X";
 	public string horizontal = "Mouse Y";
+
+	public Player player;
 	void Start ()
 	{
-		//controller = GetComponent<FPSWalkerEnhanced> ();
-
 		// Make the rigid body not change rotation
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
+
+		horizontal = player.lookX;
+		vertical = player.lookY;
 	}
 
 	void Update ()
 	{
-		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
-			Debug.Log( controller.player);
-			if (controller.player.team == 1) {
-				vertical = "VerticalRight1";
-				horizontal = "HorizontalRight1";
-			} else {
-				vertical = "VerticalRight2";
-				horizontal = "HorizontalRight2";
-				
-			}
+		if (axes == RotationAxes.MouseXAndY) {
+			float rotationX = transform.localEulerAngles.y + Input.GetAxis (horizontal) * sensitivityX;
+
+			rotationY -= Input.GetAxis (vertical) * sensitivityY;
+			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+
+			transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
+		} else if (axes == RotationAxes.MouseX) {
+				transform.Rotate (0, Input.GetAxis (horizontal) * sensitivityX, 0);
+		} else {
+			rotationY -= Input.GetAxis (vertical) * sensitivityY;
+			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+			transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
 		}
-
-						if (axes == RotationAxes.MouseXAndY) {
-								float rotationX = transform.localEulerAngles.y + Input.GetAxis (horizontal) * sensitivityX;
-			
-								rotationY += Input.GetAxis (vertical) * sensitivityY;
-								rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
-			
-								transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
-						} else if (axes == RotationAxes.MouseX) {
-								transform.Rotate (0, Input.GetAxis (horizontal) * sensitivityX, 0);
-						} else {
-								rotationY += Input.GetAxis (vertical) * sensitivityY;
-								rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
-			
-								transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
-						}
-				}
-
-	
-
+	}
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour {
 
-	public int connectedControllers = 0;
+	public int connectedControllers = 2;
 	int nextAvailableControllerIndex = 1;
 
 	private static InputManager instance;
@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour {
 	bool isKeyboardTaken = false;
 	// Use this for initialization
 	void Awake () {
-		connectedControllers = Input.GetJoystickNames().Length;
+		//connectedControllers = Input.GetJoystickNames().Length;
 	}
 
 	public void AssignControls(Player player, Player_Input_Type type)
@@ -37,13 +37,14 @@ public class InputManager : MonoBehaviour {
 		}
 		else if(type == Player_Input_Type.GAMEPAD && nextAvailableControllerIndex <= connectedControllers)
 		{
-			player.moveX = "Horizontal" + nextAvailableControllerIndex;
-			player.moveY = "Vertical"  + nextAvailableControllerIndex;
+			player.moveX = "HorizontalLeft" + nextAvailableControllerIndex;
+			player.moveY = "VerticalLeft"  + nextAvailableControllerIndex;
 			player.lookX = "HorizontalRight" +nextAvailableControllerIndex;
 			player.lookY = "VerticalRight" + nextAvailableControllerIndex;
 			player.performAction = "RB" + nextAvailableControllerIndex;
 			player.switchAction = "Y" + nextAvailableControllerIndex;
 			connectedControllers++;
+			nextAvailableControllerIndex++;
 		}
 		else
 		{

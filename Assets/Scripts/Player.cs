@@ -101,16 +101,23 @@ void Start()
 					currentAction = shootAction;
 					print ("changing player " + playerNum + " to  shooting");
 				}
-				if(Input.GetButtonDown(performAction))
+				if(Input.GetButtonDown(performAction) && currentAction == shootAction)
 					isPerformActioning = true;
-				else
+				else if(Input.GetButton(performAction)&& currentAction == hitAction){
+					isPerformActioning = true;
+				
+				}
+				else{
 					isPerformActioning = false;
+				}
+		
 			}break;
 			default:
 			break;
 		}
 
 		if(!isPerformActioning)
+
 			return;
 
 		switch(currentAction.type)

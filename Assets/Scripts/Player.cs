@@ -32,12 +32,12 @@ public class Player : BaseObject {
 	public int playerName;
 
 	public int totalPoints;
+	public int carryPoints;
 
 	public float knockbackForce = 60;
 
 	public string actionButton = "Fire1";
 	public FPSWalkerEnhanced controller;
-	public int playerNum;
 
 	bool isPerformActioning = false;
 
@@ -49,28 +49,18 @@ public class Player : BaseObject {
 		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
-void Start()
-{
-	InputManager.Instance.AssignControls(this, inputType);
-
-	if(inputType == Player_Input_Type.PC)
+	public void BindControls()
 	{
-		cam.GetComponent<MouseLook>().enabled = false;
+		InputManager.Instance.AssignControls(this, inputType);
+
+		if(inputType == Player_Input_Type.PC)
+		{
+			cam.GetComponent<MouseLook>().enabled = false;
+		}
 	}
-	//Debug.Log (Input.GetJoystickNames().Length);
-}
+
 	// Update is called once per frame
 	void Update () {
-		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
-			Debug.Log( controller.player);
-			if (controller.player.team == 1) {
-				actionButton = "RB1";
-				playerNum = 1;
-			} else {
-				actionButton = "RB2";
-				playerNum = 2;
-			}
-		}
 		HandleInput ();
 	}
 
@@ -95,11 +85,9 @@ void Start()
 			{
 				if (Input.GetButtonDown(switchAction) && currentAction == shootAction) {
 					currentAction = hitAction;
-					print ("changing player " + playerNum + " to  hit");
 
 				} else if (Input.GetButtonDown(switchAction) && currentAction == hitAction) {
 					currentAction = shootAction;
-					print ("changing player " + playerNum + " to  shooting");
 				}
 				if(Input.GetButtonDown(performAction) && currentAction == shootAction)
 					isPerformActioning = true;
@@ -161,9 +149,16 @@ void Start()
 		base.onHit (other, damage);
 	}
 
-	public void ScorePoints(int points)
+	public void CarryPoints(int points)
 	{
-		totalPoints += points;
+		carryPoints += points;
+		Debug.Log (totalPoints);
+	}
+
+	public void ScorePoints()
+	{
+		totalPoints += carryPoints;
+		carryPoints = 0;
 		Debug.Log (totalPoints);
 	}
 

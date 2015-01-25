@@ -105,6 +105,7 @@ void Start()
 					isPerformActioning = true;
 				else if(Input.GetButton(performAction)&& currentAction == hitAction){
 					isPerformActioning = true;
+				Debug.Log (this.name + " is hitting");
 				
 				}
 				else{

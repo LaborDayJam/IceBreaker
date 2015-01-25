@@ -18,7 +18,8 @@ public class Player : BaseObject {
 	public int team;
 	public int playerName;
 
-	public int totalPoints;
+	public int pointsCarried = 0;
+	public int totalPoints = 0;
 
 	public float knockbackForce = 60;
 
@@ -32,7 +33,6 @@ public class Player : BaseObject {
 	// Update is called once per frame
 	void Update () {
 		HandleInput ();
-		Debug.Log (Input.GetJoystickNames().Length);
 	}
 
 	void HandleInput()
@@ -87,9 +87,15 @@ public class Player : BaseObject {
 		base.onHit (other, damage);
 	}
 
-	public void ScorePoints(int points)
+	public void CarryPoints(int points)
 	{
-		totalPoints += points;
+		pointsCarried += points;
+	}
+
+	public void ScorePoints()
+	{
+		totalPoints += pointsCarried;
+		pointsCarried = 0;
 		Debug.Log (totalPoints);
 	}
 

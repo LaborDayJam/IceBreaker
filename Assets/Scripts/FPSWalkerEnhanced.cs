@@ -58,7 +58,7 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 
 	void Awake()
 	{
-		controllerIndex = (player.team + 1).ToString();
+		controllerIndex = "";// (player.team + 1).ToString();
 	}
 	void Start() {
 		controller = GetComponent<CharacterController>();

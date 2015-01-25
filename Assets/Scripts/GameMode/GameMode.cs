@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum NetworkType{DEVELOPMENT, SPLIT, MULTIPLAYER, SIZE};
 public class GameMode : MonoBehaviour {
 
-	
+	public NetworkType networkType = NetworkType.DEVELOPMENT;
+
 	//Team Properties
 	public const int TEAM_IGLOO_INDEX = 0;
 	public const int TEAM_ICEBREAKER_INDEX = 1;
@@ -37,18 +39,29 @@ public class GameMode : MonoBehaviour {
 	{
 		GameObject playerOne = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 		addPlayer (0, playerOne.GetComponent<Player>());
-		
+
 		//Dont instantiate dummy player if 2 player local is supported
 		// use regular player
-		GameObject playerTwo = Instantiate (prefabDummyPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+		GameObject playerTwo;
+		if (networkType == NetworkType.MULTIPLAYER)
+			playerTwo = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+		else
+			playerTwo = Instantiate (prefabDummyPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+			
 		addPlayer (1, playerTwo.GetComponent<Player>());
+
+		if (networkType == NetworkType.SPLIT) {
+			playerOne.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, .5f, 1);
+			playerTwo.GetComponentInChildren<Camera> ().rect = new Rect (.5f, 0, .5f, 1);
+		}
 	}
 	
 	protected void addPlayer(int team, Player player)
 	{
 		if (team == TEAM_IGLOO_INDEX) {
 			teamIgloo.Add(player);
-		} else {
+		} else 
+		{
 			teamIcebreaker.Add(player);
 		}
 	}

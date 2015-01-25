@@ -109,6 +109,18 @@ public class Level : MonoBehaviour {
 		Destroy (cube);
 	}
 
+	public Vector3 FindRespawnPosition()
+	{
+		IceCube tempCubeRef = null;		
+		while(tempCubeRef == null)
+		{
+			tempCubeRef = getCubeAtIndex(Random.Range(0, width * height * depth));
+		}
+		float cubeSize = prefabIceCube.transform.localScale.x;
+		Vector3 position = new Vector3(tempCubeRef.transform.position.x, cubeSize * (height + 2), tempCubeRef.transform.position.z);
+		return position;
+	}
+
 	public IceCube getCubeAtIndex(int index)
 	{
 		return map[index];

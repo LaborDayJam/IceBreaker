@@ -21,12 +21,13 @@ public class Level : MonoBehaviour {
 
 	void GenerateMap()
 	{
+		GameObject iceCube;
 		int index = 0;
 		for (int z = 0; z < depth; z++) {
 			for (int y = 0; y < height; y++){
 				for (int x = 0; x < width; x++) {
 					index = x + y * width + z * (width * height);
-					GameObject iceCube = Instantiate(prefabIceCube, new Vector3(x, y, z), Quaternion.identity) as GameObject;
+					iceCube = Instantiate(prefabIceCube, new Vector3(x, y, z), Quaternion.identity) as GameObject;
 					iceCube.GetComponent<IceCube>().index = index;
 					map.Add(iceCube.GetComponent<IceCube>());
 					iceCube.transform.parent = transform;

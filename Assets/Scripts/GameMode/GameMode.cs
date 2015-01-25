@@ -22,6 +22,9 @@ public class GameMode : MonoBehaviour {
 
 	public Player[] players;		//Assign if you don't want to instantiate players on runtime
 
+	public GameObject iceBreakerWinScreen;
+	public GameObject iglooWinScreen;
+
 	protected void Start () 
 	{
 		teamIgloo = new List<Player> ();
@@ -133,6 +136,17 @@ public class GameMode : MonoBehaviour {
 	}
 
 	protected virtual void GameOver() { }
+
+	protected IEnumerator CR_RestartToMenu()
+	{
+		while (!Input.anyKey) {
+			yield return 0;
+		}
+
+		if (Input.anyKey) {
+			Application.LoadLevel(0);
+		}
+	}
 
 	public virtual void PlayerFell(Player player) { }
 }

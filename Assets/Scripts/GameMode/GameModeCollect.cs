@@ -10,7 +10,7 @@ public class GameModeCollect : GameMode {
 	float timeLeft;
 
 	//Point Goal
-	public int winningScoreGoal = 5;
+	int winningScoreGoal = 5;
 
 	private static GameModeCollect instance;
 	public static  GameModeCollect Instance { get { return instance; } }
@@ -27,25 +27,21 @@ public class GameModeCollect : GameMode {
 
 
 
-	protected override void StartGame ()
-	{
-		base.StartGame ();
-		StartCoroutine(CR_GameLogicLoop ());
-	}
-
 	protected override void GameOver()
 	{
-		print ("doing gameover stuff");
-		if (GetTeamOneScore() > GetTeamTwoScore()) {
+		if (GetTeamOneScore () > GetTeamTwoScore ()) {
 			Debug.Log ("Team Igloo Wins"); 
-		} else
+			iglooWinScreen.SetActive (true);
+		} else {
 			Debug.Log ("Team Icebreaker Wins");
+			iceBreakerWinScreen.SetActive (true);
+		}
+		StartCoroutine (CR_RestartToMenu ());
 	}
 
 	public int GetTeamOneScore()
 	{
 		int teamOnePoints = 0;
-		print ("team size is " + teamIgloo.Count);
 		foreach (Player player in teamIgloo) {
 			teamOnePoints += player.totalPoints;
 		}
@@ -63,15 +59,8 @@ public class GameModeCollect : GameMode {
 
 	protected override IEnumerator CR_GameLogicLoop()
 	{
-		/*
-		while (timeLeft > 0) {
-			timeLeft -= Time.deltaTime;
-			yield return 0;
-		}
-		*/
-		
 		while (GetTeamOneScore() < winningScoreGoal && GetTeamTwoScore() < winningScoreGoal) {
-			Debug.Log("Igloo : " + GetTeamOneScore() + " | Icebreaker" + GetTeamTwoScore() + " winning score " + winningScoreGoal);
+			Debug.Log("Igloo : " + GetTeamOneScore() + " | Icebreaker" + GetTeamTwoScore());
 			yield return new WaitForSeconds(3.0f); //check every 3 seconds
 		}
 		GameOver();
@@ -82,7 +71,6 @@ public class GameModeCollect : GameMode {
 		Debug.Log(player.name + " fell ");
 		StartCoroutine (CR_Respawn (player));
 	}
-
 	
 	IEnumerator CR_Respawn(Player player)
 	{

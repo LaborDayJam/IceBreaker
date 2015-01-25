@@ -80,6 +80,13 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 		
 		float inputX = Input.GetAxis(player.moveX );
 		float inputY = Input.GetAxis(player.moveY );
+
+		if (inputX > 0 || inputX < 0 || inputY > 0 || inputY < 0) {
+						player.characterAnimations.SetBool ("walking", true);
+		} else {
+			player.characterAnimations.SetBool ("walking", false);
+
+		}
 		
 		// If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
 		float inputModifyFactor = (inputX != 0.0f && inputY != 0.0f && limitDiagonalSpeed)? .7071f : 1.0f;
@@ -128,10 +135,17 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 			
 			// Jump! But only if the jump button has been released and player has been grounded for a given number of frames
 			if (!Input.GetButton("Jump" + controllerIndex))
+			{
 				jumpTimer++;
+				player.characterAnimations.SetBool ("jumping", false);
+
+			}
+
 			else if (jumpTimer >= antiBunnyHopFactor) {
 				moveDirection.y = jumpSpeed;
 				jumpTimer = 0;
+				player.characterAnimations.SetBool ("walking", false);
+				player.characterAnimations.SetBool ("jumping", true);
 			}
 		}
 		else {

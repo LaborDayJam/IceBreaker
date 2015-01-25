@@ -42,6 +42,11 @@ public class Player : BaseObject {
 	bool isPerformActioning = false;
 
 	public Animator characterAnimations;
+	public GameObject rayGunForOtherPlayer;
+	public GameObject rayGunForPlayer;
+	public GameObject pickAxeForPlayer;
+	public GameObject pickAxeForOtherPlayer;
+
 
 	void Awake()
 	{
@@ -87,15 +92,42 @@ public class Player : BaseObject {
 			{
 				if (Input.GetButtonDown(switchAction) && currentAction == shootAction) {
 					currentAction = hitAction;
+					rayGunForPlayer.SetActive(false);
+					rayGunForOtherPlayer.SetActive(false);
+					pickAxeForPlayer.SetActive(true);
+					pickAxeForOtherPlayer.SetActive(true);
+
+
+
 
 				} else if (Input.GetButtonDown(switchAction) && currentAction == hitAction) {
 					currentAction = shootAction;
+					rayGunForPlayer.SetActive(true);
+					rayGunForOtherPlayer.SetActive(true);
+					pickAxeForPlayer.SetActive(false);
+					pickAxeForOtherPlayer.SetActive(false);
+
+
 				}
-				if(Input.GetButtonDown(performAction) && currentAction == shootAction)
+				else {
+					characterAnimations.SetBool("attacking",false);
+					characterAnimations.SetBool("shooting",false);
+
+				}
+				if(Input.GetButtonDown(performAction) && currentAction == shootAction){
 					isPerformActioning = true;
+					characterAnimations.SetBool("shooting",true);
+					characterAnimations.SetBool("walking",false);
+					characterAnimations.SetBool("jumping",false);
+					characterAnimations.SetBool("attacking",false);
+				}
 				else if(Input.GetButton(performAction)&& currentAction == hitAction){
 					isPerformActioning = true;
-				Debug.Log (this.name + " is hitting");
+					characterAnimations.SetBool("attacking",true);
+					characterAnimations.SetBool("walking",false);
+					characterAnimations.SetBool("jumping",false);
+					characterAnimations.SetBool("shooting",false);
+
 				
 				}
 				else{

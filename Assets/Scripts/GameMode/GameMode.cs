@@ -92,6 +92,10 @@ public class GameMode : MonoBehaviour {
 				teamIcebreaker.Add(player);
 			}
 		}
+		if (networkType == NetworkType.SPLIT) {
+			players[0].GetComponentInChildren<Camera> ().rect = new Rect (0, 0, .5f, 1);
+			players[1].GetComponentInChildren<Camera> ().rect = new Rect (.5f, 0, .5f, 1);
+		}
 	}
 
 	protected void addPlayer(int team, Player player)

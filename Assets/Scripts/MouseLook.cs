@@ -39,7 +39,15 @@ public class MouseLook : MonoBehaviour {
 		// Make the rigid body not change rotation
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
+		StartCoroutine (CR_BindControls ());
+	}
 
+	IEnumerator CR_BindControls()
+	{
+		while (player.lookX == null || player.lookY == null) {
+			yield return new WaitForSeconds(.5f);
+		}
+		
 		horizontal = player.lookX;
 		vertical = player.lookY;
 	}

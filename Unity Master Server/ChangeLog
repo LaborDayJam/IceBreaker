@@ -1,0 +1,14 @@
+Unity Master Server
+
+1.0.0 (04/03/08)
+
+- Added command line parameters for setting the most used options, (use -? to see them).
+- Added signal handler for Ctrl-C so it exits cleanly.
+- Fixed some compile errors when using Visual Studio 2003 on Windows
+- Bugfixes for long term stability
+- Added option to print statistics at specific intervals (nr. of queries/active games etc).
+- Added option to print to log file instead of stdout, file is rotate when 50MB is reached.
+
+0.1.0 (10/10/07)
+
+- Initial version

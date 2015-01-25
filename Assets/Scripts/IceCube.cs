@@ -6,7 +6,6 @@ public class IceCube : BaseObject
 	public int index;
 	bool isBreakable = true;
 
-
 	// Use this for initialization
 	void Awake () 
 	{

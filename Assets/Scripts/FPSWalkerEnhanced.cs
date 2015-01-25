@@ -56,11 +56,16 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 	private bool playerControl = false;
 	private int jumpTimer;
 
-	void Awake()
-	{
-		controllerIndex = (player.team + 1).ToString();
-	}
 	void Start() {
+		if (player.team == 0) {
+			//controllerIndex = (player.team + 1).ToString ();
+			controllerIndex = "2";
+		}
+		else {
+			controllerIndex = "1";
+
+		}
+		Debug.Log ("team number is" + player.team);
 		controller = GetComponent<CharacterController>();
 		myTransform = transform;
 		speed = walkSpeed;

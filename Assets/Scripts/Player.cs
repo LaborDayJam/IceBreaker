@@ -32,6 +32,7 @@ public class Player : BaseObject {
 	// Update is called once per frame
 	void Update () {
 		HandleInput ();
+		Debug.Log (Input.GetJoystickNames().Length);
 	}
 
 	void HandleInput()

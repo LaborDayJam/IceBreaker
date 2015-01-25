@@ -120,6 +120,7 @@ public class Player : BaseObject {
 					characterAnimations.SetBool("walking",false);
 					characterAnimations.SetBool("jumping",false);
 					characterAnimations.SetBool("attacking",false);
+					
 				}
 				else if(Input.GetButton(performAction)&& currentAction == hitAction){
 					isPerformActioning = true;

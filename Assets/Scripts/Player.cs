@@ -50,16 +50,15 @@ public class Player : BaseObject {
 		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
-void Start()
-{
-	InputManager.Instance.AssignControls(this, inputType);
-
-	if(inputType == Player_Input_Type.PC)
+	void Start()
 	{
-		cam.GetComponent<MouseLook>().enabled = false;
+		InputManager.Instance.AssignControls(this, inputType);
+
+		if(inputType == Player_Input_Type.PC)
+		{
+			cam.GetComponent<MouseLook>().enabled = false;
+		}
 	}
-	//Debug.Log (Input.GetJoystickNames().Length);
-}
 	// Update is called once per frame
 	void Update () {
 		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
@@ -102,6 +101,7 @@ void Start()
 					currentAction = shootAction;
 					print ("changing player " + playerNum + " to  shooting");
 				}
+
 				if(Input.GetButtonDown(performAction))
 					isPerformActioning = true;
 				else

@@ -20,16 +20,28 @@ public class GameMode : MonoBehaviour {
 	public GameObject prefabPlayer;
 	public GameObject prefabDummyPlayer; //for local player two
 
+
+	public Player[] players;	//Populate if you don't want to instantiate players in runtime
+		
 	protected void Start () 
 	{
 		teamIgloo = new List<Player> ();
 		teamIcebreaker = new List<Player> ();
+
+		//Create Level
+		level.Init ();
+
+		//Spawn Players
+		if (players.Length == 0)
+			SpawnPlayers ();
+		else
+			BindPlayers ();
+		
 		StartGame ();
 	}
-	
+
 	protected virtual void StartGame()
 	{
-		SpawnPlayers ();
 		StartCoroutine (CR_GameLogicLoop ());
 		StartCoroutine (CR_CheckWinCondition ());
 		StartCoroutine (CR_CheckLoseCondition ());
@@ -39,9 +51,8 @@ public class GameMode : MonoBehaviour {
 	{
 		GameObject playerOne = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 		playerOne.name = "playerOne";
+		playerOne.GetComponent<Player> ().team = 0;
 		playerOne.GetComponent<Player>().inputType = Player_Input_Type.PC;
-
-		addPlayer (0, playerOne.GetComponent<Player>());
 
 		//Dont instantiate dummy player if 2 player local is supported
 		// use regular player
@@ -51,29 +62,40 @@ public class GameMode : MonoBehaviour {
 		else
 			playerTwo = Instantiate (prefabDummyPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 			
-		playerOne.GetComponent<Player> ().team = 0;
 		playerTwo.name = "playerTwo";
-
-
 		playerTwo.GetComponent<Player> ().team = 1;
 		playerTwo.GetComponent<Player>().inputType = Player_Input_Type.GAMEPAD;
-
-		addPlayer (1, playerTwo.GetComponent<Player>());
 
 		if (networkType == NetworkType.SPLIT) {
 			playerOne.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, .5f, 1);
 			playerTwo.GetComponentInChildren<Camera> ().rect = new Rect (.5f, 0, .5f, 1);
 		}
+
+		addPlayer (0, playerOne.GetComponent<Player>());
+		addPlayer (1, playerTwo.GetComponent<Player>());
 	}
-	
+
+
+	void BindPlayers()
+	{
+		if (players.Length < 2) {
+			Debug.Log("ERROR: LESS THAN 2 PLAYERS");
+		}
+
+		foreach (Player player in players) {
+			if(player.team == TEAM_IGLOO_INDEX)
+				teamIgloo.Add(player);
+			else
+				teamIcebreaker.Add(player);
+		}
+	}
+
 	protected void addPlayer(int team, Player player)
 	{
-		if (team == TEAM_IGLOO_INDEX) {
+		if (team == TEAM_IGLOO_INDEX)
 			teamIgloo.Add(player);
-		} else 
-		{
+		else 
 			teamIcebreaker.Add(player);
-		}
 	}
 	
 	protected void removePlayer(int team, Player player)

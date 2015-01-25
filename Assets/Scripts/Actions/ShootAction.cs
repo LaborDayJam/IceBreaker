@@ -29,7 +29,7 @@ public class ShootAction : Action {
 		Ray ray;
 
 		if(GetComponent<Player>().team == 1)
-			ray = cam.ScreenPointToRay (new Vector2(cam.pixelRect.center.x + cam.pixelWidth * .5f, cam.pixelHeight * .5f));
+			ray = cam.ScreenPointToRay (new Vector2(cam.pixelRect.center.x, cam.pixelHeight * .5f));
 		else
 			ray = cam.ScreenPointToRay (new Vector2(cam.pixelWidth * .5f, cam.pixelHeight * .5f));
 		RaycastHit hit;

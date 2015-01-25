@@ -3,18 +3,13 @@ using System.Collections;
 
 public class Collector : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
+	//TODO fall if no cube underneath
 	void OnTriggerEnter(Collider other)
 	{
-
+		Player player = other.GetComponent<Player> ();
+		if (player == null)
+			return;
+		
+		player.ScorePoints ();
 	}
 }

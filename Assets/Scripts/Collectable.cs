@@ -12,7 +12,7 @@ public class Collectable : MonoBehaviour {
 		if (player == null)
 			return;
 
-		player.ScorePoints (value);
+		player.CarryPoints (value);
 		Debug.Log (other.name + " collected " + name); 
 		Destroy (gameObject);
 	}

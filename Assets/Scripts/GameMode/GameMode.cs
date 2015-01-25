@@ -38,6 +38,7 @@ public class GameMode : MonoBehaviour {
 	protected void SpawnPlayers()
 	{
 		GameObject playerOne = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+		playerOne.name = "playerOne";
 		addPlayer (0, playerOne.GetComponent<Player>());
 
 		//Dont instantiate dummy player if 2 player local is supported
@@ -48,6 +49,12 @@ public class GameMode : MonoBehaviour {
 		else
 			playerTwo = Instantiate (prefabDummyPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 			
+		playerOne.GetComponent<Player> ().team = 0;
+		playerTwo.name = "playerTwo";
+
+
+		playerTwo.GetComponent<Player> ().team = 1;
+
 		addPlayer (1, playerTwo.GetComponent<Player>());
 
 		if (networkType == NetworkType.SPLIT) {

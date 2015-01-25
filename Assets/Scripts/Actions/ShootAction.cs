@@ -4,6 +4,7 @@ using System.Collections;
 public class ShootAction : Action {
 
 	float damage;
+	Camera cam;
 	void Awake()
 	{
 		actionName = "Solar Gun";
@@ -13,6 +14,11 @@ public class ShootAction : Action {
 		range = 10f;
 		damage = 100;
 	}
+
+	void Start()
+	{
+		cam = GetComponentInChildren<Camera> ();
+	}
 	
 	public override void Do()
 	{
@@ -20,7 +26,12 @@ public class ShootAction : Action {
 			return;
 
 		//Find & hit target
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		Ray ray;
+
+		if(GetComponent<Player>().team == 1)
+			ray = cam.ScreenPointToRay (new Vector2(cam.pixelRect.center.x + cam.pixelWidth * .5f, cam.pixelHeight * .5f));
+		else
+			ray = cam.ScreenPointToRay (new Vector2(cam.pixelWidth * .5f, cam.pixelHeight * .5f));
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit, range)) {
 			BaseObject target = hit.transform.GetComponent<BaseObject>();

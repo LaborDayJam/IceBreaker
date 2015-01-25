@@ -56,11 +56,16 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 	private bool playerControl = false;
 	private int jumpTimer;
 
-	void Awake()
-	{
-		controllerIndex = "";// (player.team + 1).ToString();
-	}
 	void Start() {
+		if (player.team == 0) {
+			//controllerIndex = (player.team + 1).ToString ();
+			controllerIndex = "2";
+		}
+		else {
+			controllerIndex = "1";
+
+		}
+		Debug.Log ("team number is" + player.team);
 		controller = GetComponent<CharacterController>();
 		myTransform = transform;
 		speed = walkSpeed;
@@ -103,7 +108,7 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 			//	speed = Input.GetButton("Run")? runSpeed : walkSpeed;
 			
 			// If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
-			if ( (sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider != null && hit.collider.tag == "Slide") ) {
+			if ( (sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider.tag == "Slide") ) {
 				Vector3 hitNormal = hit.normal;
 				moveDirection = new Vector3(hitNormal.x, -hitNormal.y, hitNormal.z);
 				Vector3.OrthoNormalize (ref hitNormal, ref moveDirection);

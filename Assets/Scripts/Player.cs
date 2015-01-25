@@ -22,6 +22,11 @@ public class Player : BaseObject {
 
 	public float knockbackForce = 60;
 
+	public string actionButton = "Fire1";
+	public FPSWalkerEnhanced controller;
+	public int playerNum;
+
+
 	void Awake()
 	{
 		hitAction = gameObject.AddComponent<HitAction>();
@@ -31,30 +36,46 @@ public class Player : BaseObject {
 
 	// Update is called once per frame
 	void Update () {
+		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
+			Debug.Log( controller.player);
+			if (controller.player.team == 1) {
+				actionButton = "RB1";
+				playerNum = 1;
+			} else {
+				actionButton = "RB2";
+				playerNum = 2;
+			}
+		}
+
+
 		HandleInput ();
 		Debug.Log (Input.GetJoystickNames().Length);
 	}
 
 	void HandleInput()
 	{
-		if (Input.GetKeyDown (KeyCode.Alpha1)) {
+		if ((Input.GetKeyDown (KeyCode.Alpha1) || (Input.GetButtonDown("Y"+playerNum)) && currentAction == shootAction) ) {
 			currentAction = hitAction;
-		} else if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			print ("changing player " + playerNum + " to  hit");
+
+		} else if ((Input.GetKeyDown (KeyCode.Alpha2) || (Input.GetButtonDown("Y"+playerNum)) && currentAction == hitAction)) {
 			currentAction = shootAction;
+			print ("changing player " + playerNum + " to  shooting");
 		}
 
 		switch(currentAction.type)
 		{
 		case ACTION_TYPE.ONCE:
 		{
-			if(Input.GetMouseButtonDown(0))
+			if(Input.GetButtonDown(actionButton))
 			{
+				print ("doing action");
 				currentAction.Do();
 			}
 		}break;
 		case ACTION_TYPE.CONTINOUS:
 		{
-			if(Input.GetMouseButton(0))
+			if(Input.GetButtonDown(actionButton))
 				currentAction.Do();
 		}break;
 		default:

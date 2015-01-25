@@ -10,9 +10,6 @@ public class Floor : MonoBehaviour {
 		if (player == null)
 			return;
 
-		if (GameModeCombat.Instance != null)
-			GameModeCombat.Instance.PlayerFell (player);
-		else if (GameModeCollect.Instance != null)
-			GameModeCollect.Instance.PlayerFell (player);
+		player.OnFall ();
 	}
 }

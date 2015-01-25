@@ -31,8 +31,7 @@ public class Player : BaseObject {
 	public int team;
 	public int playerName;
 
-	public int pointsCarried = 0;
-	public int totalPoints = 0;
+	public int totalPoints;
 
 	public float knockbackForce = 60;
 
@@ -50,15 +49,16 @@ public class Player : BaseObject {
 		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
-	void Start()
-	{
-		InputManager.Instance.AssignControls(this, inputType);
+void Start()
+{
+	InputManager.Instance.AssignControls(this, inputType);
 
-		if(inputType == Player_Input_Type.PC)
-		{
-			cam.GetComponent<MouseLook>().enabled = false;
-		}
+	if(inputType == Player_Input_Type.PC)
+	{
+		cam.GetComponent<MouseLook>().enabled = false;
 	}
+	//Debug.Log (Input.GetJoystickNames().Length);
+}
 	// Update is called once per frame
 	void Update () {
 		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
@@ -101,17 +101,23 @@ public class Player : BaseObject {
 					currentAction = shootAction;
 					print ("changing player " + playerNum + " to  shooting");
 				}
-
-				if(Input.GetButtonDown(performAction))
+				if(Input.GetButtonDown(performAction) && currentAction == shootAction)
 					isPerformActioning = true;
-				else
+				else if(Input.GetButton(performAction)&& currentAction == hitAction){
+					isPerformActioning = true;
+				
+				}
+				else{
 					isPerformActioning = false;
+				}
+		
 			}break;
 			default:
 			break;
 		}
 
 		if(!isPerformActioning)
+
 			return;
 
 		switch(currentAction.type)
@@ -154,15 +160,9 @@ public class Player : BaseObject {
 		base.onHit (other, damage);
 	}
 
-	public void CarryPoints(int points)
+	public void ScorePoints(int points)
 	{
-		pointsCarried += points;
-	}
-
-	public void ScorePoints()
-	{
-		totalPoints += pointsCarried;
-		pointsCarried = 0;
+		totalPoints += points;
 		Debug.Log (totalPoints);
 	}
 

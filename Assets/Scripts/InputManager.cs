@@ -43,8 +43,25 @@ public class InputManager : MonoBehaviour {
 			player.lookY = "VerticalRight" + nextAvailableControllerIndex;
 			player.performAction = "RB" + nextAvailableControllerIndex;
 			player.switchAction = "Y" + nextAvailableControllerIndex;
+			if(nextAvailableControllerIndex == 1){
+				player.GetComponentInChildren<Camera>().cullingMask =  (1 << LayerMask.NameToLayer("TransparentFX")) | (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("UI")) | (1 << LayerMask.NameToLayer("PlayerTwo"));
+				player.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("PlayerOne");
+				player.rayGunForPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+				player.rayGunForOtherPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+				player.pickAxeForPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+				player.pickAxeForOtherPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+			}
+			else {
+				player.GetComponentInChildren<Camera>().cullingMask =  (1 << LayerMask.NameToLayer("TransparentFX")) | (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("UI")) | (1 << LayerMask.NameToLayer("PlayerOne"));
+				player.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("PlayerTwo");
+				player.rayGunForPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+				player.rayGunForOtherPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+				player.pickAxeForPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+				player.pickAxeForOtherPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+			}
 			connectedControllers++;
 			nextAvailableControllerIndex++;
+
 		}
 		else
 		{

@@ -32,14 +32,21 @@ public class Player : BaseObject {
 	public int playerName;
 
 	public int totalPoints;
+	public int carryPoints;
 
 	public float knockbackForce = 60;
 
 	public string actionButton = "Fire1";
 	public FPSWalkerEnhanced controller;
-	public int playerNum;
 
 	bool isPerformActioning = false;
+
+	public Animator characterAnimations;
+	public GameObject rayGunForOtherPlayer;
+	public GameObject rayGunForPlayer;
+	public GameObject pickAxeForPlayer;
+	public GameObject pickAxeForOtherPlayer;
+
 
 	void Awake()
 	{
@@ -49,28 +56,18 @@ public class Player : BaseObject {
 		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
-void Start()
-{
-	InputManager.Instance.AssignControls(this, inputType);
-
-	if(inputType == Player_Input_Type.PC)
+	public void BindControls()
 	{
-		cam.GetComponent<MouseLook>().enabled = false;
+		InputManager.Instance.AssignControls(this, inputType);
+
+		if(inputType == Player_Input_Type.PC)
+		{
+			cam.GetComponent<MouseLook>().enabled = false;
+		}
 	}
-	//Debug.Log (Input.GetJoystickNames().Length);
-}
+
 	// Update is called once per frame
 	void Update () {
-		if (GameModeCollect.Instance.networkType == NetworkType.SPLIT) {
-			Debug.Log( controller.player);
-			if (controller.player.team == 1) {
-				actionButton = "RB1";
-				playerNum = 1;
-			} else {
-				actionButton = "RB2";
-				playerNum = 2;
-			}
-		}
 		HandleInput ();
 	}
 
@@ -95,17 +92,42 @@ void Start()
 			{
 				if (Input.GetButtonDown(switchAction) && currentAction == shootAction) {
 					currentAction = hitAction;
-					print ("changing player " + playerNum + " to  hit");
+					rayGunForPlayer.SetActive(false);
+					rayGunForOtherPlayer.SetActive(false);
+					pickAxeForPlayer.SetActive(true);
+					pickAxeForOtherPlayer.SetActive(true);
+
+
+
 
 				} else if (Input.GetButtonDown(switchAction) && currentAction == hitAction) {
 					currentAction = shootAction;
-					print ("changing player " + playerNum + " to  shooting");
+					rayGunForPlayer.SetActive(true);
+					rayGunForOtherPlayer.SetActive(true);
+					pickAxeForPlayer.SetActive(false);
+					pickAxeForOtherPlayer.SetActive(false);
+
+
 				}
-				if(Input.GetButtonDown(performAction) && currentAction == shootAction)
+				else {
+					characterAnimations.SetBool("attacking",false);
+					characterAnimations.SetBool("shooting",false);
+
+				}
+				if(Input.GetButtonDown(performAction) && currentAction == shootAction){
 					isPerformActioning = true;
+					characterAnimations.SetBool("shooting",true);
+					characterAnimations.SetBool("walking",false);
+					characterAnimations.SetBool("jumping",false);
+					characterAnimations.SetBool("attacking",false);
+				}
 				else if(Input.GetButton(performAction)&& currentAction == hitAction){
 					isPerformActioning = true;
-				Debug.Log (this.name + " is hitting");
+					characterAnimations.SetBool("attacking",true);
+					characterAnimations.SetBool("walking",false);
+					characterAnimations.SetBool("jumping",false);
+					characterAnimations.SetBool("shooting",false);
+
 				
 				}
 				else{
@@ -161,9 +183,16 @@ void Start()
 		base.onHit (other, damage);
 	}
 
-	public void ScorePoints(int points)
+	public void CarryPoints(int points)
 	{
-		totalPoints += points;
+		carryPoints += points;
+		Debug.Log (totalPoints);
+	}
+
+	public void ScorePoints()
+	{
+		totalPoints += carryPoints;
+		carryPoints = 0;
 		Debug.Log (totalPoints);
 	}
 

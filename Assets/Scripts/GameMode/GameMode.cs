@@ -20,6 +20,8 @@ public class GameMode : MonoBehaviour {
 	public GameObject prefabPlayer;
 	public GameObject prefabDummyPlayer; //for local player two
 
+	public Player[] players;		//Assign if you don't want to instantiate players on runtime
+
 	protected void Start () 
 	{
 		teamIgloo = new List<Player> ();
@@ -29,7 +31,16 @@ public class GameMode : MonoBehaviour {
 	
 	protected virtual void StartGame()
 	{
-		SpawnPlayers ();
+		level.Init ();
+
+		if (players.Length > 1)
+			BindPlayers ();
+		else
+			SpawnPlayers ();
+
+		foreach (Player player in players)
+			level.PlacePlayersAtEdge(player, player.team);
+			
 		StartCoroutine (CR_GameLogicLoop ());
 		StartCoroutine (CR_CheckWinCondition ());
 		StartCoroutine (CR_CheckLoseCondition ());
@@ -37,35 +48,56 @@ public class GameMode : MonoBehaviour {
 	
 	protected void SpawnPlayers()
 	{
-		GameObject playerOne = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+		GameObject playerOneObj = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+		Player playerOne = playerOneObj.GetComponent<Player> ();
+		playerOne.BindControls ();
 		playerOne.name = "playerOne";
-		playerOne.GetComponent<Player> ().inputType = Player_Input_Type.GAMEPAD;
+		playerOne.team = 0;
+		playerOne.inputType = Player_Input_Type.GAMEPAD;
 
-		addPlayer (0, playerOne.GetComponent<Player>());
-
-		//Dont instantiate dummy player if 2 player local is supported
-		// use regular player
-		GameObject playerTwo;
+		GameObject playerTwoObj;
+		Player playerTwo;
 		if (networkType == NetworkType.MULTIPLAYER)
-			playerTwo = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+			playerTwoObj = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 		else
-			playerTwo = Instantiate (prefabDummyPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
+			playerTwoObj = Instantiate (prefabDummyPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 			
-		playerOne.GetComponent<Player> ().team = 0;
+		playerTwo = playerTwoObj.GetComponent<Player> ();
+
+		playerTwo.BindControls ();
 		playerTwo.name = "playerTwo";
-
-
-		playerTwo.GetComponent<Player> ().team = 1;
-		playerTwo.GetComponent<Player>().inputType = Player_Input_Type.GAMEPAD;
-
-		addPlayer (1, playerTwo.GetComponent<Player>());
+		playerTwo.team = 1;
+		playerTwo.inputType = Player_Input_Type.GAMEPAD;
 
 		if (networkType == NetworkType.SPLIT) {
 			playerOne.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, .5f, 1);
 			playerTwo.GetComponentInChildren<Camera> ().rect = new Rect (.5f, 0, .5f, 1);
 		}
+
+		addPlayer (0, playerOne);
+		addPlayer (1, playerTwo);
+
+		players = new Player[]{playerOne, playerTwo};
 	}
-	
+
+	void BindPlayers()
+	{
+		foreach (Player player in players) {
+			player.BindControls();
+			
+			if (player.team == TEAM_IGLOO_INDEX) {
+				teamIgloo.Add(player);
+			}
+			else {
+				teamIcebreaker.Add(player);
+			}
+		}
+		if (networkType == NetworkType.SPLIT) {
+			players[0].GetComponentInChildren<Camera> ().rect = new Rect (0, 0, .5f, 1);
+			players[1].GetComponentInChildren<Camera> ().rect = new Rect (.5f, 0, .5f, 1);
+		}
+	}
+
 	protected void addPlayer(int team, Player player)
 	{
 		if (team == TEAM_IGLOO_INDEX) {

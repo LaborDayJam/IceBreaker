@@ -4,8 +4,8 @@ using System.Collections;
 public class IceCube : BaseObject 
 {
 	public int index;
-	bool isBreakable = true;
 
+	public bool isOccupied = false;
 	// Use this for initialization
 	void Awake () 
 	{

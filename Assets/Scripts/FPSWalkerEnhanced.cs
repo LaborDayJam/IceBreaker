@@ -137,12 +137,14 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 			if (!Input.GetButton("Jump" + controllerIndex))
 			{
 				jumpTimer++;
+				
 				player.characterAnimations.SetBool ("jumping", false);
 
 			}
 
 			else if (jumpTimer >= antiBunnyHopFactor) {
 				moveDirection.y = jumpSpeed;
+				AudioManager.instance.PlayOneShot(1,this.transform.position);
 				jumpTimer = 0;
 				player.characterAnimations.SetBool ("walking", false);
 				player.characterAnimations.SetBool ("jumping", true);

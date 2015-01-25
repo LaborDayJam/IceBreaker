@@ -43,6 +43,7 @@ public class ShootAction : Action {
 
 		//Start Cooldown
 		isReady = false;
+		AudioManager.instance.PlayOneShot(2, this.transform.position);
 		StartCoroutine (CR_StartCooldown ());
 	}
 }

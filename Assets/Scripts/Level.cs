@@ -106,7 +106,7 @@ public class Level : MonoBehaviour {
 		player.transform.position = tf.transform.position;
 
 		//Destroy the cube
-		Destroy (cube);
+		Destroy (cube.gameObject);
 	}
 
 	public Vector3 FindRespawnPosition()

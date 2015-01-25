@@ -162,13 +162,8 @@ public class Player : BaseObject {
 	IEnumerator CR_Stunned()
 	{
 		state = STATE_STUNNED;
-		Component motor = gameObject.GetComponent ("CharacterMotor");
-		motor.SendMessage ("DisableMotor");
-
 		yield return new WaitForSeconds (stunDuration);
 		state = STATE_NORMAL;
-
-		motor.SendMessage ("EnableMotor");
 	}
 
 	public override void onHit (GameObject other, float damage)
@@ -178,9 +173,10 @@ public class Player : BaseObject {
 			Vector3 direction = (transform.position - other.transform.position).normalized;
 			GetComponent<ImpactReceiver>().AddImpact(direction, knockbackForce);
 		} else if (attacker.currentAction is ShootAction) {
-			StartCoroutine (CR_Stunned ());
+			Vector3 direction = (transform.position - other.transform.position).normalized;
+			GetComponent<ImpactReceiver>().AddImpact(direction, knockbackForce* 10);
 		}
-		base.onHit (other, damage);
+		//base.onHit (other, damage);
 	}
 
 	public void CarryPoints(int points)

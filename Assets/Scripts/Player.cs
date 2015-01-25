@@ -47,6 +47,7 @@ public class Player : BaseObject {
 	public GameObject pickAxeForPlayer;
 	public GameObject pickAxeForOtherPlayer;
 
+	public UIGemCounter gemCounter;
 
 	void Awake()
 	{
@@ -56,6 +57,10 @@ public class Player : BaseObject {
 		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
+	void Start()
+	{
+		gemCounter.UpdateGemCounter (0);
+	}
 	public void BindControls()
 	{
 		InputManager.Instance.AssignControls(this, inputType);
@@ -120,6 +125,7 @@ public class Player : BaseObject {
 					characterAnimations.SetBool("walking",false);
 					characterAnimations.SetBool("jumping",false);
 					characterAnimations.SetBool("attacking",false);
+					
 				}
 				else if(Input.GetButton(performAction)&& currentAction == hitAction){
 					isPerformActioning = true;
@@ -127,8 +133,6 @@ public class Player : BaseObject {
 					characterAnimations.SetBool("walking",false);
 					characterAnimations.SetBool("jumping",false);
 					characterAnimations.SetBool("shooting",false);
-
-				
 				}
 				else{
 					isPerformActioning = false;
@@ -189,7 +193,18 @@ public class Player : BaseObject {
 	{
 		totalPoints += carryPoints;
 		carryPoints = 0;
-		Debug.Log (totalPoints);
+		gemCounter.UpdateGemCounter (totalPoints);
+		Debug.Log ("Total Points for " + name + " : " + totalPoints);
+	}
+
+	public void OnFall()
+	{
+		carryPoints = 0;
+		
+		if (GameModeCombat.Instance != null)
+			GameModeCombat.Instance.PlayerFell (this);
+		else if (GameModeCollect.Instance != null)
+			GameModeCollect.Instance.PlayerFell (this);
 	}
 
 	void OnDestroy()

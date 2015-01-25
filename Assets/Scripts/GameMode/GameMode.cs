@@ -129,5 +129,6 @@ public class GameMode : MonoBehaviour {
 	}
 
 	protected virtual void GameOver() { }
-	
+
+	public virtual void PlayerFell(Player player) { }
 }

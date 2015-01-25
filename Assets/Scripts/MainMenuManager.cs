@@ -20,6 +20,16 @@ public class MainMenuManager : MonoBehaviour {
 	
 	}
 
+	public void loadLargeLevel()
+	{
+		Application.LoadLevel ("GameCollect_SplitScreen_Large");
+	}
+
+	public void loadSmallLevel()
+	{
+		Application.LoadLevel ("GameCollect_SplitScreen_Small");
+	}
+
 	public void loadGame(){
 		Application.LoadLevel ("GameCollect_SplitScreen");
 	}

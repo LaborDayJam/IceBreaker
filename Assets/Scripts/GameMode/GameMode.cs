@@ -139,6 +139,7 @@ public class GameMode : MonoBehaviour {
 
 	protected IEnumerator CR_RestartToMenu()
 	{
+		yield return new WaitForSeconds (2); //wait 2 seconds before listening to input
 		while (!Input.anyKey) {
 			yield return 0;
 		}

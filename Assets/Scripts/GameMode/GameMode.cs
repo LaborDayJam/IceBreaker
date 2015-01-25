@@ -39,6 +39,8 @@ public class GameMode : MonoBehaviour {
 	{
 		GameObject playerOne = Instantiate (prefabPlayer, new Vector3 (0, 18, 0), Quaternion.identity) as GameObject;
 		playerOne.name = "playerOne";
+		playerOne.GetComponent<Player>().inputType = Player_Input_Type.PC;
+
 		addPlayer (0, playerOne.GetComponent<Player>());
 
 		//Dont instantiate dummy player if 2 player local is supported
@@ -54,6 +56,7 @@ public class GameMode : MonoBehaviour {
 
 
 		playerTwo.GetComponent<Player> ().team = 1;
+		playerTwo.GetComponent<Player>().inputType = Player_Input_Type.GAMEPAD;
 
 		addPlayer (1, playerTwo.GetComponent<Player>());
 

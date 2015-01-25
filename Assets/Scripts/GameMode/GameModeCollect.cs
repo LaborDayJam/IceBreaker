@@ -10,7 +10,7 @@ public class GameModeCollect : GameMode {
 	float timeLeft;
 
 	//Point Goal
-	int winningScoreGoal = 10;
+	public int winningScoreGoal = 5;
 
 	private static GameModeCollect instance;
 	public static  GameModeCollect Instance { get { return instance; } }
@@ -27,8 +27,15 @@ public class GameModeCollect : GameMode {
 
 
 
+	protected override void StartGame ()
+	{
+		base.StartGame ();
+		StartCoroutine(CR_GameLogicLoop ());
+	}
+
 	protected override void GameOver()
 	{
+		print ("doing gameover stuff");
 		if (GetTeamOneScore() > GetTeamTwoScore()) {
 			Debug.Log ("Team Igloo Wins"); 
 		} else
@@ -38,6 +45,7 @@ public class GameModeCollect : GameMode {
 	public int GetTeamOneScore()
 	{
 		int teamOnePoints = 0;
+		print ("team size is " + teamIgloo.Count);
 		foreach (Player player in teamIgloo) {
 			teamOnePoints += player.totalPoints;
 		}
@@ -62,8 +70,8 @@ public class GameModeCollect : GameMode {
 		}
 		*/
 		
-		while (GetTeamOneScore() < winningScoreGoal || GetTeamTwoScore() < winningScoreGoal) {
-			Debug.Log("Igloo : " + GetTeamOneScore() + " | Icebreaker" + GetTeamTwoScore());
+		while (GetTeamOneScore() < winningScoreGoal && GetTeamTwoScore() < winningScoreGoal) {
+			Debug.Log("Igloo : " + GetTeamOneScore() + " | Icebreaker" + GetTeamTwoScore() + " winning score " + winningScoreGoal);
 			yield return new WaitForSeconds(3.0f); //check every 3 seconds
 		}
 		GameOver();

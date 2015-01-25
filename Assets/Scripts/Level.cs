@@ -8,7 +8,7 @@ public class Level : MonoBehaviour {
 	public int height;
 	public int depth;
 	 
-	List<IceCube> map;
+	public List<IceCube> map;
 	List<Collectable> collectables;
 
 	public GameObject prefabIceCube;
@@ -44,6 +44,7 @@ public class Level : MonoBehaviour {
 					iceCube.GetComponent<IceCube>().index = index;
 					map.Add(iceCube.GetComponent<IceCube>());
 					iceCube.transform.parent = transform;
+					iceCube.name = x + "_" + y + "_" + z;
 				}
 			}
 		}
@@ -56,7 +57,7 @@ public class Level : MonoBehaviour {
 			GameObject collectablePrefab = prefabCollectables[Random.Range(0, prefabCollectables.Length)];
 			Vector3 position = getCubeAtIndex(Random.Range(0, width * height * depth)).transform.position;
 			GameObject collectable = Instantiate(collectablePrefab, position, Quaternion.identity) as GameObject;
-			collectable.transform.parent = transform.parent;
+			collectable.transform.parent = transform;
 			collectables.Add(collectable.GetComponent<Collectable>());
 		}
 	}
@@ -67,9 +68,29 @@ public class Level : MonoBehaviour {
 		{
 			Vector3 position = getCubeAtIndex(Random.Range(0, width * height * depth)).transform.position;
 			GameObject cart = Instantiate(prefabCart, position, Quaternion.identity) as GameObject;
-			cart.transform.parent = transform.parent;
+			cart.transform.parent = transform;
 			carts.Add(cart.GetComponent<Collector>());
 		}
+	}
+
+	//Spawns players on opposite corners
+	public void PlacePlayersAtEdge(Player player, int playerIndex)
+	{
+		IceCube cube;// = map [index];
+		int mapIndex;
+		if (playerIndex == 0) {
+			mapIndex = (int)( width * height * .5f);
+		} else {
+			mapIndex = (int)((width * depth * height ) - (int)(width * height * .5f)) + width - 1;
+		}
+		cube = map [mapIndex];
+
+		//Place the player
+		Transform tf = map [mapIndex].transform;
+		player.transform.position = tf.transform.position;
+
+		//Destroy the cube
+		Destroy (cube);
 	}
 
 	public IceCube getCubeAtIndex(int index)

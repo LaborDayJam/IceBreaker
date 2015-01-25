@@ -37,6 +37,9 @@ public class GameMode : MonoBehaviour {
 			BindPlayers ();
 		else
 			SpawnPlayers ();
+
+		foreach (Player player in players)
+			level.PlacePlayersAtEdge(player, player.team);
 			
 		StartCoroutine (CR_GameLogicLoop ());
 		StartCoroutine (CR_CheckWinCondition ());
@@ -73,17 +76,19 @@ public class GameMode : MonoBehaviour {
 
 		addPlayer (0, playerOne);
 		addPlayer (1, playerTwo);
+
+		players = new Player[]{playerOne, playerTwo};
 	}
 
 	void BindPlayers()
 	{
 		foreach (Player player in players) {
+			player.BindControls();
+			
 			if (player.team == TEAM_IGLOO_INDEX) {
-				player.BindControls();
 				teamIgloo.Add(player);
 			}
 			else {
-				player.BindControls();
 				teamIcebreaker.Add(player);
 			}
 		}

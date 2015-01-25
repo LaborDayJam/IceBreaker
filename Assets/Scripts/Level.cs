@@ -21,7 +21,7 @@ public class Level : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () 
+	public void Init () 
 	{
 		map = new List<IceCube>();
 		collectables = new List<Collectable> ();

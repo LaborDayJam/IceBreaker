@@ -16,6 +16,11 @@ public class GameModeCombat : GameMode {
 		}
 	}
 
+	void Start()
+	{
+		StartGame ();		
+	}
+
 	public override void PlayerFell(Player player)
 	{
 		GameOver();

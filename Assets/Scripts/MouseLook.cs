@@ -39,32 +39,21 @@ public class MouseLook : MonoBehaviour {
 		// Make the rigid body not change rotation
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
-		StartCoroutine (CR_BindControls ());
-	}
-
-	IEnumerator CR_BindControls()
-	{
-		while (player.lookX == null || player.lookY == null) {
-			yield return new WaitForSeconds(.5f);
-		}
-		
-		horizontal = player.lookX;
-		vertical = player.lookY;
 	}
 
 	void Update ()
 	{
 		if (axes == RotationAxes.MouseXAndY) {
 			float rotationX = transform.localEulerAngles.y + Input.GetAxis (horizontal) * sensitivityX;
-
+			
 			rotationY -= Input.GetAxis (vertical) * sensitivityY;
 			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
-
+			
 			transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
 		} else if (axes == RotationAxes.MouseX) {
 				transform.Rotate (0, Input.GetAxis (horizontal) * sensitivityX, 0);
 		} else {
-			rotationY -= Input.GetAxis (vertical) * sensitivityY;
+			rotationY = Input.GetAxis (vertical) * sensitivityY;
 			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 			transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
 		}

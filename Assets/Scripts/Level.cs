@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Level : MonoBehaviour {
+public class Level : Photon.MonoBehaviour {
 
 	public int width;
 	public int height;
@@ -19,7 +19,6 @@ public class Level : MonoBehaviour {
 	public List<Collector> carts;
 	public int cart_count = 3;
 
-
 	// Use this for initialization
 	public void Init () 
 	{
@@ -29,6 +28,8 @@ public class Level : MonoBehaviour {
 		GenerateMap ();
 		SpawnCollectables();
 		SpawnCarts ();
+
+		Debug.Log ("Map: Finished Spawn Everything");
 	}
 
 	void GenerateMap()
@@ -40,11 +41,13 @@ public class Level : MonoBehaviour {
 			for (int y = 0; y < height; y++){
 				for (int x = 0; x < width; x++) {
 					index = x + y * width + z * (width * height);
-					GameObject iceCube = Instantiate(prefabIceCube, new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity) as GameObject;
-					iceCube.GetComponent<IceCube>().index = index;
-					map.Add(iceCube.GetComponent<IceCube>());
-					iceCube.transform.parent = transform;
-					iceCube.name = x + "_" + y + "_" + z;
+					GameObject iceCubeObj = Instantiate(prefabIceCube, new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity) as GameObject;
+					IceCube iceCube = iceCubeObj.GetComponent<IceCube>();
+					iceCube.index = index;
+					map.Add(iceCube);
+					iceCubeObj.transform.parent = transform;
+					iceCubeObj.name = x + "_" + y + "_" + z;
+					iceCube.SetLevel(this);
 				}
 			}
 		}
@@ -129,5 +132,18 @@ public class Level : MonoBehaviour {
 	public int getCollectableCount()
 	{
 		return collectables.Count;
+	}
+
+	public void DestroyCube(IceCube cube)
+	{
+		photonView.RPC ("DestroyMapObject", PhotonTargets.Others, cube.index);
+		DestroyMapObject (cube.index);
+	}
+
+	[RPC]
+	void DestroyMapObject(int index)
+	{
+		if (map [index] != null)
+			Destroy (map [index].gameObject);
 	}
 }

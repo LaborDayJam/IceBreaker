@@ -30,9 +30,15 @@ public class HitAction : Action {
 			if(target != null && target.isTargetable)
 			{
 				target.onHit(gameObject, damage * Time.deltaTime);
-				AudioManager.instance.PlayOneShot(0, this.transform.position);
+				//AudioManager.instance.PlayOneShot(0, this.transform.position);
 				//Debug.Log("Hitting " + target.name + " Health " + target.health);
 			}
 		}
 	}
+	/*
+	IEnumerator CR_PlaySound()
+	{
+
+	}
+	*/
 }

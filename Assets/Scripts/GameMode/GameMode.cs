@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum NetworkType{DEVELOPMENT, SPLIT, MULTIPLAYER, SIZE};
-public class GameMode : MonoBehaviour {
+public class GameMode : Photon.MonoBehaviour {
 
 	public NetworkType networkType = NetworkType.DEVELOPMENT;
 
@@ -25,11 +25,10 @@ public class GameMode : MonoBehaviour {
 	public GameObject iceBreakerWinScreen;
 	public GameObject iglooWinScreen;
 
-	protected void Start () 
+	protected virtual void Awake () 
 	{
 		teamIgloo = new List<Player> ();
 		teamIcebreaker = new List<Player> ();
-		StartGame ();
 	}
 	
 	protected virtual void StartGame()
@@ -83,17 +82,24 @@ public class GameMode : MonoBehaviour {
 		players = new Player[]{playerOne, playerTwo};
 	}
 
-	void BindPlayers()
+	protected void BindPlayer(Player player)
 	{
+		player.BindControls();
+		player.EnableInput();
+		
+		if (player.team == TEAM_IGLOO_INDEX) {
+			teamIgloo.Add(player);
+		}
+		else {
+			teamIcebreaker.Add(player);
+		}
+	}
+
+	protected void BindPlayers()
+	{
+		Debug.Log ("Bind Players");
 		foreach (Player player in players) {
-			player.BindControls();
-			
-			if (player.team == TEAM_IGLOO_INDEX) {
-				teamIgloo.Add(player);
-			}
-			else {
-				teamIcebreaker.Add(player);
-			}
+			BindPlayer(player);
 		}
 		if (networkType == NetworkType.SPLIT) {
 			players[0].GetComponentInChildren<Camera> ().rect = new Rect (0, 0, .5f, 1);

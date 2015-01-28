@@ -65,7 +65,6 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 			controllerIndex = "1";
 
 		}
-		Debug.Log ("team number is" + player.team);
 		controller = GetComponent<CharacterController>();
 		myTransform = transform;
 		speed = walkSpeed;
@@ -75,17 +74,14 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		//float inputX = (player.inputType == Player_Input_Type.PC) ? Input.GetAxis("Horizontal" ) : Input.GetAxis("Horizontal" + controllerIndex);
-		//float inputY = (player.inputType == Player_Input_Type.PC) ? Input.GetAxis("Vertical" ) : Input.GetAxis("Vertical" + controllerIndex);
 		
 		float inputX = Input.GetAxis(player.moveX );
 		float inputY = Input.GetAxis(player.moveY );
 
 		if (inputX > 0 || inputX < 0 || inputY > 0 || inputY < 0) {
-						player.characterAnimations.SetBool ("walking", true);
+				player.characterAnimations.SetBool ("walking", true);
 		} else {
 			player.characterAnimations.SetBool ("walking", false);
-
 		}
 		
 		// If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
@@ -125,12 +121,14 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 				Vector3.OrthoNormalize (ref hitNormal, ref moveDirection);
 				moveDirection *= slideSpeed;
 				playerControl = false;
+				Debug.Log("SLIDING");
 			}
 			// Otherwise recalculate moveDirection directly from axes, adding a bit of -y to avoid bumping down inclines
 			else {
 				moveDirection = new Vector3(inputX * inputModifyFactor, -antiBumpFactor, inputY * inputModifyFactor);
 				moveDirection = myTransform.TransformDirection(moveDirection) * speed;
 				playerControl = true;
+				//Debug.Log("Dir " + moveDirection +"  " + speed);
 			}
 			
 			// Jump! But only if the jump button has been released and player has been grounded for a given number of frames

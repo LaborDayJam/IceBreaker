@@ -4,28 +4,29 @@ using System.Collections.Generic;
 
 public class GameModeCollect : GameMode {
 
-
-	//Time Limit
-	float timeLimit = 120; //seconds
-	float timeLeft;
-
 	//Point Goal
 	int winningScoreGoal = 5;
 
 	private static GameModeCollect instance;
 	public static  GameModeCollect Instance { get { return instance; } }
 
-	void Awake()
+	public bool DEBUG = true;
+
+	protected override void Awake()
 	{
-		if(instance == null)
+		if (instance == null) {
+			base.Awake();
 			instance = this;
-		else{
+		} else{
 			Debug.Log("WARNING: DUPLICATE GAME MODE OBJECT. DESTROYING SELF");
 			Destroy(gameObject);
 		}
 	}
 
-
+	void Start()
+	{
+		StartGame ();
+	}
 
 	protected override void GameOver()
 	{

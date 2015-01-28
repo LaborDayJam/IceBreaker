@@ -54,13 +54,13 @@ public class Player : BaseObject {
 		hitAction = gameObject.AddComponent<HitAction>();
 		shootAction = gameObject.AddComponent<ShootAction> ();
 		currentAction = hitAction;
-		//Debug.Log (Input.GetJoystickNames().Length);
 	}
 
 	void Start()
 	{
 		gemCounter.UpdateGemCounter (0);
 	}
+
 	public void BindControls()
 	{
 		InputManager.Instance.AssignControls(this, inputType);
@@ -71,94 +71,110 @@ public class Player : BaseObject {
 		}
 	}
 
-	// Update is called once per frame
-	void Update () {
-		HandleInput ();
+	public void DisableInput()
+	{
+		controller.enabled = false;
+		MouseLook look = GetComponent<MouseLook> ();
+		look.enabled = false;
+		StopCoroutine ("HandleInput");
 	}
 
-	void HandleInput()
+	public void EnableInput()
 	{
-		switch(inputType)
-		{
+		controller.enabled = true;
+		MouseLook look = GetComponent<MouseLook> ();
+		look.enabled = true;
+		look.vertical = lookY;
+		look.horizontal = lookX;
+		StartCoroutine ("HandleInput");
+
+		Debug.Log ("ENABLE INPUT");
+	}
+
+	IEnumerator HandleInput()
+	{
+		while (true) {
+			switch (inputType) {
 			case Player_Input_Type.PC:
-			{
-				if(Input.GetKeyDown (KeyCode.Alpha1))
-					currentAction = hitAction;
+					{
+							if (Input.GetKeyDown (KeyCode.Alpha1))
+									currentAction = hitAction;
 
-				 if (Input.GetKeyDown (KeyCode.Alpha2))
-				 	currentAction = shootAction;
+							if (Input.GetKeyDown (KeyCode.Alpha2))
+									currentAction = shootAction;
 
-			 	if(Input.GetMouseButton(0))
-				 	isPerformActioning = true;
-				else
-					isPerformActioning = false;
-			}break;
+							if (Input.GetMouseButton (0))
+									isPerformActioning = true;
+							else
+									isPerformActioning = false;
+					}
+					break;
 			case Player_Input_Type.GAMEPAD:
-			{
-				if (Input.GetButtonDown(switchAction) && currentAction == shootAction) {
-					currentAction = hitAction;
-					rayGunForPlayer.SetActive(false);
-					rayGunForOtherPlayer.SetActive(false);
-					pickAxeForPlayer.SetActive(true);
-					pickAxeForOtherPlayer.SetActive(true);
+					{
+							if (Input.GetButtonDown (switchAction) && currentAction == shootAction) {
+									currentAction = hitAction;
+									rayGunForPlayer.SetActive (false);
+									rayGunForOtherPlayer.SetActive (false);
+									pickAxeForPlayer.SetActive (true);
+									pickAxeForOtherPlayer.SetActive (true);
 
 
 
 
-				} else if (Input.GetButtonDown(switchAction) && currentAction == hitAction) {
-					currentAction = shootAction;
-					rayGunForPlayer.SetActive(true);
-					rayGunForOtherPlayer.SetActive(true);
-					pickAxeForPlayer.SetActive(false);
-					pickAxeForOtherPlayer.SetActive(false);
+							} else if (Input.GetButtonDown (switchAction) && currentAction == hitAction) {
+									currentAction = shootAction;
+									rayGunForPlayer.SetActive (true);
+									rayGunForOtherPlayer.SetActive (true);
+									pickAxeForPlayer.SetActive (false);
+									pickAxeForOtherPlayer.SetActive (false);
 
 
-				}
-				else {
-					characterAnimations.SetBool("attacking",false);
-					characterAnimations.SetBool("shooting",false);
+							} else {
+									characterAnimations.SetBool ("attacking", false);
+									characterAnimations.SetBool ("shooting", false);
 
-				}
-				if(Input.GetButtonDown(performAction) && currentAction == shootAction){
-					isPerformActioning = true;
-					characterAnimations.SetBool("shooting",true);
-					characterAnimations.SetBool("walking",false);
-					characterAnimations.SetBool("jumping",false);
-					characterAnimations.SetBool("attacking",false);
-					
-				}
-				else if(Input.GetButton(performAction)&& currentAction == hitAction){
-					isPerformActioning = true;
-					characterAnimations.SetBool("attacking",true);
-					characterAnimations.SetBool("walking",false);
-					characterAnimations.SetBool("jumping",false);
-					characterAnimations.SetBool("shooting",false);
-				}
-				else{
-					isPerformActioning = false;
-				}
+							}
+							if (Input.GetButtonDown (performAction) && currentAction == shootAction) {
+									isPerformActioning = true;
+									characterAnimations.SetBool ("shooting", true);
+									characterAnimations.SetBool ("walking", false);
+									characterAnimations.SetBool ("jumping", false);
+									characterAnimations.SetBool ("attacking", false);
 		
-			}break;
+							} else if (Input.GetButton (performAction) && currentAction == hitAction) {
+									isPerformActioning = true;
+									characterAnimations.SetBool ("attacking", true);
+									characterAnimations.SetBool ("walking", false);
+									characterAnimations.SetBool ("jumping", false);
+									characterAnimations.SetBool ("shooting", false);
+							} else {
+									isPerformActioning = false;
+							}
+
+					}
+					break;
 			default:
-			break;
-		}
+					break;
+			}
 
-		if(!isPerformActioning)
-
-			return;
-
-		switch(currentAction.type)
-		{
-		case ACTION_TYPE.ONCE:
-		{
-			currentAction.Do();
-		}break;
-		case ACTION_TYPE.CONTINOUS:
-		{
-			currentAction.Do();
-		}break;
-		default:
-			break;
+			if (isPerformActioning)
+			{
+				switch (currentAction.type) {
+				case ACTION_TYPE.ONCE:
+						{
+								currentAction.Do ();
+						}
+						break;
+				case ACTION_TYPE.CONTINOUS:
+						{
+								currentAction.Do ();
+						}
+						break;
+				default:
+						break;
+				}
+			}
+			yield return 0;
 		}
 	}
 

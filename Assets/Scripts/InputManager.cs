@@ -5,6 +5,7 @@ public class InputManager : MonoBehaviour {
 
 	public int connectedControllers = 2;
 	int nextAvailableControllerIndex = 1;
+	public Player[] players = new Player[2];
 
 	private static InputManager instance;
 	public static InputManager Instance {get { 
@@ -24,6 +25,8 @@ public class InputManager : MonoBehaviour {
 	void Awake () {
 		//connectedControllers = Input.GetJoystickNames().Length;
 	}
+
+
 
 	public void AssignControls(Player player, Player_Input_Type type)
 	{
@@ -50,6 +53,8 @@ public class InputManager : MonoBehaviour {
 				player.rayGunForOtherPlayer.layer = LayerMask.NameToLayer("PlayerOne");
 				player.pickAxeForPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
 				player.pickAxeForOtherPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+				player.playerNum = 1;
+				players[0] = player;
 			}
 			else {
 				player.GetComponentInChildren<Camera>().cullingMask =  (1 << LayerMask.NameToLayer("TransparentFX")) | (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("UI")) | (1 << LayerMask.NameToLayer("PlayerOne"));
@@ -58,6 +63,9 @@ public class InputManager : MonoBehaviour {
 				player.rayGunForOtherPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
 				player.pickAxeForPlayer.layer = LayerMask.NameToLayer("PlayerOne");
 				player.pickAxeForOtherPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+				player.playerNum =2 ;
+				players[1] = player;
+				print ("got here");
 			}
 			connectedControllers++;
 			nextAvailableControllerIndex++;

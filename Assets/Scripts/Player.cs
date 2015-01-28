@@ -49,6 +49,8 @@ public class Player : BaseObject {
 
 	public UIGemCounter gemCounter;
 
+	public int playerNum;
+
 	void Awake()
 	{
 		hitAction = gameObject.AddComponent<HitAction>();
@@ -56,6 +58,7 @@ public class Player : BaseObject {
 		currentAction = hitAction;
 		//Debug.Log (Input.GetJoystickNames().Length);
 	}
+
 
 	void Start()
 	{
@@ -74,6 +77,31 @@ public class Player : BaseObject {
 	// Update is called once per frame
 	void Update () {
 		HandleInput ();
+		print (cam.rect + " " + gameObject.name);
+		
+		if(cam.rect == new Rect (0, 0, .5f, 1)){
+			cam.cullingMask =  (1 << LayerMask.NameToLayer("TransparentFX")) | (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("UI")) | (1 << LayerMask.NameToLayer("PlayerOne"));
+			gameObject.GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("PlayerTwo");
+			rayGunForPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+			rayGunForOtherPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+			pickAxeForPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+			pickAxeForOtherPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+			
+			print ("setting this stuff");
+			
+		}
+		else {
+			cam.cullingMask =  (1 << LayerMask.NameToLayer("TransparentFX")) | (1 << LayerMask.NameToLayer("Default")) | (1 << LayerMask.NameToLayer("UI")) | (1 << LayerMask.NameToLayer("PlayerTwo"));
+			gameObject.GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("PlayerOne");
+			rayGunForPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+			rayGunForOtherPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+			pickAxeForPlayer.layer = LayerMask.NameToLayer("PlayerTwo");
+			pickAxeForOtherPlayer.layer = LayerMask.NameToLayer("PlayerOne");
+			
+		}
+		
+		
+
 	}
 
 	void HandleInput()

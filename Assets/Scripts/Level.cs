@@ -35,7 +35,6 @@ public class Level : Photon.MonoBehaviour {
 	void GenerateMap()
 	{
 		float cubeSize = prefabIceCube.transform.localScale.x;
-		Debug.Log (cubeSize);
 		int index = 0;
 		for (int z = 0; z < depth; z++) {
 			for (int y = 0; y < height; y++){
@@ -95,6 +94,7 @@ public class Level : Photon.MonoBehaviour {
 	//Spawns players on opposite corners
 	public void PlacePlayersAtEdge(Player player, int playerIndex)
 	{
+		/*
 		IceCube cube;// = map [index];
 		int mapIndex;
 		if (playerIndex == 0) {
@@ -110,6 +110,7 @@ public class Level : Photon.MonoBehaviour {
 
 		//Destroy the cube
 		Destroy (cube.gameObject);
+		*/
 	}
 
 	public Vector3 FindRespawnPosition()

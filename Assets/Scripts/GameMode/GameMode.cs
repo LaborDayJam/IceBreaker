@@ -40,8 +40,8 @@ public class GameMode : Photon.MonoBehaviour {
 		else
 			SpawnPlayers ();
 
-		foreach (Player player in players)
-			level.PlacePlayersAtEdge(player, player.team);
+		//foreach (Player player in players)
+		//	level.PlacePlayersAtEdge(player, player.team);
 			
 		StartCoroutine (CR_GameLogicLoop ());
 		StartCoroutine (CR_CheckWinCondition ());

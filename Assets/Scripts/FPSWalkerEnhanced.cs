@@ -132,7 +132,7 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 			}
 			
 			// Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-			if (!Input.GetButton("Jump" + controllerIndex))
+			if (!Input.GetButton("Jump" + controllerIndex) && !Input.GetButton("Jump"))
 			{
 				jumpTimer++;
 				
@@ -142,7 +142,7 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 
 			else if (jumpTimer >= antiBunnyHopFactor) {
 				moveDirection.y = jumpSpeed;
-				AudioManager.instance.PlayOneShot(1,this.transform.position);
+				//AudioManager.instance.PlayOneShot(1,this.transform.position);
 				jumpTimer = 0;
 				player.characterAnimations.SetBool ("walking", false);
 				player.characterAnimations.SetBool ("jumping", true);

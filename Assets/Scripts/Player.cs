@@ -67,7 +67,7 @@ public class Player : BaseObject {
 
 		if(inputType == Player_Input_Type.PC)
 		{
-			cam.GetComponent<MouseLook>().enabled = false;
+			//cam.GetComponent<MouseLook>().enabled = false;
 		}
 	}
 

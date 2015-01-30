@@ -27,7 +27,6 @@ public class MouseLook : MonoBehaviour {
 
 	public float minimumY = -60F;
 	public float maximumY = 60F;
-	public FPSWalkerEnhanced controller;
 
 	float rotationY = 0F;
 	public string vertical = "Mouse X";
@@ -41,6 +40,7 @@ public class MouseLook : MonoBehaviour {
 			GetComponent<Rigidbody>().freezeRotation = true;
 	}
 
+	
 	void Update ()
 	{
 		if (axes == RotationAxes.MouseXAndY) {
@@ -51,9 +51,9 @@ public class MouseLook : MonoBehaviour {
 			
 			transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
 		} else if (axes == RotationAxes.MouseX) {
-				transform.Rotate (0, Input.GetAxis (horizontal) * sensitivityX, 0);
+			transform.Rotate (0, Input.GetAxis (horizontal) * sensitivityX, 0);
 		} else {
-			rotationY = Input.GetAxis (vertical) * sensitivityY;
+			rotationY -= Input.GetAxis (vertical) * sensitivityY;
 			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 			transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
 		}

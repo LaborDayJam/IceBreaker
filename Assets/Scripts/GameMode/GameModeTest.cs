@@ -3,10 +3,14 @@ using System.Collections;
 
 public class GameModeTest : GameMode {
 
+	public GameObject prefabPlayerOne;
+	
+	public GameObject prefabPlayerTwo;
 	PhotonPlayer myPlayer;
 	// Use this for initialization
 	void Start () 
 	{
+		ScenePhotonView = this.GetComponent<PhotonView>();
 	}
 
 	void Initialize(Player player)
@@ -28,38 +32,83 @@ public class GameModeTest : GameMode {
 	
 	void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
 	{
-		int playerCount = PhotonNetwork.playerList.Length;
-		Debug.Log("ASDAS " + playerCount);
+		Debug.Log("OnPhotonPlayerConnected: " + newPlayer);
 		
-		//if(playerCount > 1 && state == WAITING_FOR_PLAYERS)
-		//	StartCoroutine (CR_StartRace ());
+		// when new players join, we send "who's it" to let them know
+		// only one player will do this: the "master"
+		
+		if (PhotonNetwork.isMasterClient)
+		{
+			TagPlayer(playerWhoIsIt);
+		}
 	}
-	
 	void OnJoinedRoom()
+	{
+		playerWhoIsIt = PhotonNetwork.player.ID;
+		
+		Debug.Log("playerWhoIsIt: " + playerWhoIsIt);
+		MakePlayer ();
+	}
+
+	void MakePlayer()
 	{
 		int playerCount = PhotonNetwork.playerList.Length;
 		print ("Player Count " + playerCount);
 
-		Player player = players [playerCount - 1];
-		player.photonView.RequestOwnership ();
+		GameObject playerObj = PhotonNetwork.Instantiate ("PlayerOne", new Vector3 (0, 10, 0), Quaternion.identity, 0);
+		Player player = playerObj.GetComponent<NPlayer>();
+		if (PhotonNetwork.player.isLocal) {
+			player.photonView.RequestOwnership ();
+			player.EnableInput();
+			Debug.Log ("Getting Ownership");
+		} else {
+			Camera cam = player.GetComponentInChildren<Camera>();
+			player.DisableInput();
+			cam.enabled = false;
+			cam.tag = "";
+			player.GetComponentInChildren<AudioListener>().enabled = false;
+			cam.GetComponent<MouseLook>().enabled = false;
+			player.GetComponent<MouseLook>().enabled = false;
+		}
 		player.cam.tag = "MainCamera";
 		Initialize (player);
 		
 		myPlayer = PhotonNetwork.player;
-		
-		for(int i = 0; i < players.Length; i++)
-		{
-			Debug.Log(i);
-			if(i != (playerCount - 1))
-			{
-				Debug.Log("Yea " + i);
-				Camera cam = players[i].GetComponentInChildren<Camera>();
-				players[i].DisableInput();
-				cam.enabled = false;
-				cam.tag = "";
-				players[i].GetComponentInChildren<AudioListener>().enabled = false;
-			}
-		}	
 	}
 
+
+	public static int playerWhoIsIt = 0;
+	private static PhotonView ScenePhotonView;
+
+	public static void TagPlayer(int playerID)
+	{
+		Debug.Log("TagPlayer: " + playerID);
+		ScenePhotonView.RPC("TaggedPlayer", PhotonTargets.All, playerID);
+	}
+	
+	[RPC]
+	public void TaggedPlayer(int playerID)
+	{
+		playerWhoIsIt = playerID;
+		Debug.Log("TaggedPlayer: " + playerID);
+	}
+	
+	public void OnPhotonPlayerDisconnected(PhotonPlayer player)
+	{
+		Debug.Log("OnPhotonPlayerDisconnected: " + player);
+		
+		if (PhotonNetwork.isMasterClient)
+		{
+			if (player.ID == playerWhoIsIt)
+			{
+				// if the player who left was "it", the "master" is the new "it"
+				TagPlayer(PhotonNetwork.player.ID);
+			}
+		}
+	}
+	
+	public void OnMasterClientSwitched()
+	{
+		Debug.Log("OnMasterClientSwitched");
+	}
 }

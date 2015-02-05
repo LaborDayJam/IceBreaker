@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameModeTest : GameMode {
 
 	public GameObject prefabPlayerOne;
 	
 	public GameObject prefabPlayerTwo;
-	PhotonPlayer myPlayer;
+	public PhotonPlayer myPlayer;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -15,19 +17,9 @@ public class GameModeTest : GameMode {
 
 	void Initialize(Player player)
 	{
-		//if (isInitialized)
-		//	return;
 		level.Init ();
-		
-		//level.PlacePlayersAtEdge(player, player.team);
 		BindPlayer (player);
-	
-		//foreach (Player player in players)
-		//	level.PlacePlayersAtEdge(player, player.team);
-		
 		StartCoroutine (CR_GameLogicLoop ());
-		//StartCoroutine (CR_CheckWinCondition ());
-		//StartCoroutine (CR_CheckLoseCondition ());
 	}
 	
 	void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
@@ -55,13 +47,14 @@ public class GameModeTest : GameMode {
 		int playerCount = PhotonNetwork.playerList.Length;
 		print ("Player Count " + playerCount);
 
-		GameObject playerObj = PhotonNetwork.Instantiate ("PlayerOne", new Vector3 (0, 10, 0), Quaternion.identity, 0);
-		Player player = playerObj.GetComponent<NPlayer>();
+		GameObject playerObj = PhotonNetwork.Instantiate ((playerWhoIsIt == PhotonNetwork.player.ID) ? "IBPlayer" : "IBPlayer", new Vector3 (0, 10, 0), Quaternion.identity, 0);
+		NPlayer player = playerObj.GetComponent<NPlayer>();
 		if (PhotonNetwork.player.isLocal) {
-			player.photonView.RequestOwnership ();
+			//player.photonView.RequestOwnership ();
 			player.EnableInput();
 			Debug.Log ("Getting Ownership");
 		} else {
+			/*
 			Camera cam = player.GetComponentInChildren<Camera>();
 			player.DisableInput();
 			cam.enabled = false;
@@ -69,11 +62,21 @@ public class GameModeTest : GameMode {
 			player.GetComponentInChildren<AudioListener>().enabled = false;
 			cam.GetComponent<MouseLook>().enabled = false;
 			player.GetComponent<MouseLook>().enabled = false;
+			*/
 		}
+		player.camera.SetActive (true);
+		//player.GetComponentInChildren<Camera> ().gameObject.SetActive (true);//enabled = true;
+		//player.GetComponentInChildren<AudioListener>().enabled = true;
+		player.GetComponent<MouseLook>().enabled = true;
+
 		player.cam.tag = "MainCamera";
+
+		player.Init (PhotonNetwork.player);
+
 		Initialize (player);
-		
+
 		myPlayer = PhotonNetwork.player;
+
 	}
 
 

@@ -3,16 +3,18 @@ using System.Collections;
 
 public class NPlayer : Player {
 
-	PhotonPlayer photonPlayer;
-
-	void Init(PhotonPlayer player)
+	public PhotonPlayer photonPlayer;
+	public GameObject camera;
+	public void Init(PhotonPlayer player)
 	{
 		photonPlayer = player;
+		gameObject.name = "Player" + player.ID;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		
 	}
 
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

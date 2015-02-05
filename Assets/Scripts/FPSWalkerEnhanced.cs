@@ -74,9 +74,19 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		
+
+		/*
+		Debug.Log (PhotonNetwork.player.ID + " | " + ((player as NPlayer).photonPlayer).ID );
+		if (!PhotonNetwork.player.ID.Equals( ((player as NPlayer).photonPlayer).ID  ) ) {
+			Debug.Log("DFSKHSDFKJGDS");
+			return;	
+		}
+		Debug.Log ("DODD"); 
+		*/
 		float inputX = Input.GetAxis(player.moveX );
 		float inputY = Input.GetAxis(player.moveY );
+		Debug.Log ("Hi");
+		Debug.Log("X : " + inputX + " |  Y : " + inputY);
 
 		if (inputX > 0 || inputX < 0 || inputY > 0 || inputY < 0) {
 				player.characterAnimations.SetBool ("walking", true);

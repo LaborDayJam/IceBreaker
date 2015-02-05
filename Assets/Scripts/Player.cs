@@ -58,7 +58,7 @@ public class Player : BaseObject {
 
 	void Start()
 	{
-		gemCounter.UpdateGemCounter (0);
+		//gemCounter.UpdateGemCounter (0);
 	}
 
 	public void BindControls()
@@ -87,7 +87,6 @@ public class Player : BaseObject {
 		look.vertical = lookY;
 		look.horizontal = lookX;
 		StartCoroutine ("HandleInput");
-
 		Debug.Log ("ENABLE INPUT");
 	}
 

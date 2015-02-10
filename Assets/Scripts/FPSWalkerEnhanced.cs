@@ -85,8 +85,6 @@ public class FPSWalkerEnhanced: MonoBehaviour {
 		*/
 		float inputX = Input.GetAxis(player.moveX );
 		float inputY = Input.GetAxis(player.moveY );
-		Debug.Log ("Hi");
-		Debug.Log("X : " + inputX + " |  Y : " + inputY);
 
 		if (inputX > 0 || inputX < 0 || inputY > 0 || inputY < 0) {
 				player.characterAnimations.SetBool ("walking", true);

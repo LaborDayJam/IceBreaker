@@ -40,7 +40,7 @@ public class Level : Photon.MonoBehaviour {
 			for (int y = 0; y < height; y++){
 				for (int x = 0; x < width; x++) {
 					index = x + y * width + z * (width * height);
-					GameObject iceCubeObj = Instantiate(prefabIceCube, new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity) as GameObject;
+					GameObject iceCubeObj = PhotonNetwork.InstantiateSceneObject("IBIceCube", new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity, Global.ICE_CUBE_INDEX, null) as GameObject;
 					IceCube iceCube = iceCubeObj.GetComponent<IceCube>();
 					iceCube.index = index;
 					map.Add(iceCube);
@@ -58,13 +58,14 @@ public class Level : Photon.MonoBehaviour {
 		for(int i = 0; i < max_collectables; i++)
 		{
 			tempCubeRef = null;
-			GameObject collectablePrefab = prefabCollectables[Random.Range(0, prefabCollectables.Length)];
 			while(tempCubeRef == null || tempCubeRef.isOccupied)
 			{
 				tempCubeRef = getCubeAtIndex(Random.Range(0, width * height * depth));
 			}
+			string treasurePrefabName = "IBTreasure";
 			Vector3 position = tempCubeRef.transform.position;
-			GameObject collectable = Instantiate(collectablePrefab, position, Quaternion.identity) as GameObject;
+			GameObject collectable = PhotonNetwork.InstantiateSceneObject(treasurePrefabName, position, Quaternion.identity, Global.TREASURE_INDEX, null) as GameObject;
+			Debug.Log("Spawning " + treasurePrefabName + " | " + collectable);
 			collectable.transform.parent = transform;
 			collectables.Add(collectable.GetComponent<Collectable>());
 
@@ -83,7 +84,7 @@ public class Level : Photon.MonoBehaviour {
 				tempCubeRef = getCubeAtIndex(Random.Range(0, width * height * depth));
 			}
 			Vector3 position = tempCubeRef.transform.position;
-			GameObject cart = Instantiate(prefabCart, position, Quaternion.identity) as GameObject;
+			GameObject cart = PhotonNetwork.InstantiateSceneObject("IBCart", position, Quaternion.identity, Global.CART_INDEX, null) as GameObject;
 			cart.transform.parent = transform;
 			carts.Add(cart.GetComponent<Collector>());
 
@@ -137,7 +138,7 @@ public class Level : Photon.MonoBehaviour {
 
 	public void DestroyCube(IceCube cube)
 	{
-		photonView.RPC ("DestroyMapObject", PhotonTargets.Others, cube.index);
+		//photonView.RPC ("DestroyMapObject", PhotonTargets.Others, cube.index);
 		DestroyMapObject (cube.index);
 	}
 
@@ -145,6 +146,6 @@ public class Level : Photon.MonoBehaviour {
 	void DestroyMapObject(int index)
 	{
 		if (map [index] != null)
-			Destroy (map [index].gameObject);
+			PhotonNetwork.Destroy (map [index].gameObject);
 	}
 }

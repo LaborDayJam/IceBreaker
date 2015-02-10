@@ -4,9 +4,6 @@ using System.Collections.Generic;
 
 public class GameModeTest : GameMode {
 
-	public GameObject prefabPlayerOne;
-	
-	public GameObject prefabPlayerTwo;
 	public PhotonPlayer myPlayer;
 
 	// Use this for initialization
@@ -17,6 +14,7 @@ public class GameModeTest : GameMode {
 
 	void Initialize(Player player)
 	{
+		PhotonNetwork.SetMasterClient (PhotonNetwork.player);
 		level.Init ();
 		BindPlayer (player);
 		StartCoroutine (CR_GameLogicLoop ());
@@ -53,20 +51,8 @@ public class GameModeTest : GameMode {
 			//player.photonView.RequestOwnership ();
 			player.EnableInput();
 			Debug.Log ("Getting Ownership");
-		} else {
-			/*
-			Camera cam = player.GetComponentInChildren<Camera>();
-			player.DisableInput();
-			cam.enabled = false;
-			cam.tag = "";
-			player.GetComponentInChildren<AudioListener>().enabled = false;
-			cam.GetComponent<MouseLook>().enabled = false;
-			player.GetComponent<MouseLook>().enabled = false;
-			*/
-		}
+		} 
 		player.camera.SetActive (true);
-		//player.GetComponentInChildren<Camera> ().gameObject.SetActive (true);//enabled = true;
-		//player.GetComponentInChildren<AudioListener>().enabled = true;
 		player.GetComponent<MouseLook>().enabled = true;
 
 		player.cam.tag = "MainCamera";
@@ -76,9 +62,7 @@ public class GameModeTest : GameMode {
 		Initialize (player);
 
 		myPlayer = PhotonNetwork.player;
-
 	}
-
 
 	public static int playerWhoIsIt = 0;
 	private static PhotonView ScenePhotonView;

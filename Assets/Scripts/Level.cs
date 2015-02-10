@@ -43,6 +43,7 @@ public class Level : Photon.MonoBehaviour {
 					GameObject iceCubeObj = PhotonNetwork.InstantiateSceneObject("IBIceCube", new Vector3(x * cubeSize, y * cubeSize, z * cubeSize), Quaternion.identity, Global.ICE_CUBE_INDEX, null) as GameObject;
 					IceCube iceCube = iceCubeObj.GetComponent<IceCube>();
 					iceCube.index = index;
+					iceCube.map = this;
 					map.Add(iceCube);
 					iceCubeObj.transform.parent = transform;
 					iceCubeObj.name = x + "_" + y + "_" + z;
@@ -64,8 +65,8 @@ public class Level : Photon.MonoBehaviour {
 			}
 			string treasurePrefabName = "IBTreasure";
 			Vector3 position = tempCubeRef.transform.position;
-			GameObject collectable = PhotonNetwork.InstantiateSceneObject(treasurePrefabName, position, Quaternion.identity, Global.TREASURE_INDEX, null) as GameObject;
-			Debug.Log("Spawning " + treasurePrefabName + " | " + collectable);
+			GameObject collectable = PhotonNetwork.InstantiateSceneObject("IBTreasure", position, Quaternion.identity, Global.ICE_CUBE_INDEX, null) as GameObject;
+			Debug.Log(collectable);
 			collectable.transform.parent = transform;
 			collectables.Add(collectable.GetComponent<Collectable>());
 
@@ -84,7 +85,7 @@ public class Level : Photon.MonoBehaviour {
 				tempCubeRef = getCubeAtIndex(Random.Range(0, width * height * depth));
 			}
 			Vector3 position = tempCubeRef.transform.position;
-			GameObject cart = PhotonNetwork.InstantiateSceneObject("IBCart", position, Quaternion.identity, Global.CART_INDEX, null) as GameObject;
+			GameObject cart = PhotonNetwork.InstantiateSceneObject(prefabCart.name, position, Quaternion.identity, Global.ICE_CUBE_INDEX, null) as GameObject;
 			cart.transform.parent = transform;
 			carts.Add(cart.GetComponent<Collector>());
 

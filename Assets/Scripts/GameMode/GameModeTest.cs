@@ -15,7 +15,9 @@ public class GameModeTest : GameMode {
 	void Initialize(Player player)
 	{
 		PhotonNetwork.SetMasterClient (PhotonNetwork.player);
-		level.Init ();
+		if(PhotonNetwork.isMasterClient)
+			level.Init ();
+
 		BindPlayer (player);
 		StartCoroutine (CR_GameLogicLoop ());
 	}

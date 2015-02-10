@@ -6,7 +6,7 @@ public class IceCube : BaseObject
 	public int index;
 
 	public bool isOccupied = false;
-	Level map;
+	public Level map;
 
 	public GameObject icebreak;
 	// Use this for initialization

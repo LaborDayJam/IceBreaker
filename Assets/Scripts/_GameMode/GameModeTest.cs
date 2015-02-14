@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class GameModeTest : GameMode {
 
 	public PhotonPlayer myPlayer;
+	bool isInitialized = false;
+	public int playerOneScore = 0;
+	public int playerTwoScore = 0;
 
 	// Use this for initialization
 	void Start () 
@@ -14,12 +17,6 @@ public class GameModeTest : GameMode {
 
 	void Initialize(Player player)
 	{
-		PhotonNetwork.SetMasterClient (PhotonNetwork.player);
-		if(PhotonNetwork.isMasterClient)
-			level.Init ();
-
-		BindPlayer (player);
-		StartCoroutine (CR_GameLogicLoop ());
 	}
 	
 	void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
@@ -34,12 +31,19 @@ public class GameModeTest : GameMode {
 			TagPlayer(playerWhoIsIt);
 		}
 	}
+
 	void OnJoinedRoom()
 	{
 		playerWhoIsIt = PhotonNetwork.player.ID;
 		
 		Debug.Log("playerWhoIsIt: " + playerWhoIsIt);
 		MakePlayer ();
+
+		
+		if (PhotonNetwork.isMasterClient && !isInitialized) {
+			level.Init ();
+			photonView.RPC ("setInitialized", PhotonTargets.All, null);
+		}
 	}
 
 	void MakePlayer()
@@ -61,9 +65,13 @@ public class GameModeTest : GameMode {
 
 		player.Init (PhotonNetwork.player);
 
-		Initialize (player);
-
 		myPlayer = PhotonNetwork.player;
+		
+		BindPlayer (player);
+		StartCoroutine (CR_GameLogicLoop ());
+
+		Debug.Log ("Is Master Client " + PhotonNetwork.isMasterClient);
+
 	}
 
 	public static int playerWhoIsIt = 0;
@@ -99,5 +107,12 @@ public class GameModeTest : GameMode {
 	public void OnMasterClientSwitched()
 	{
 		Debug.Log("OnMasterClientSwitched");
+	}
+
+	[RPC]
+	void setInitialized()
+	{
+		isInitialized = true;
+		Debug.Log ("Game is initialized");
 	}
 }

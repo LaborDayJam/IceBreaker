@@ -14,6 +14,7 @@ public class IceCube : BaseObject
 	{
 		Color original = renderer.material.color;
 		renderer.material.color = new Color (original.r, original.g, original.b, Random.Range (.6f, 1f));
+		map = GameObject.Find ("Map").GetComponent<Level> ();
 	}
 
 	public override void onHit(GameObject other, float damage)
@@ -24,6 +25,8 @@ public class IceCube : BaseObject
 			map.DestroyCube(this);			//Destroy (gameObject);
 		}
 	}
+
+
 
 	public void SetLevel(Level level) { map = level; }
 }

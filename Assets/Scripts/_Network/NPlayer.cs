@@ -34,4 +34,29 @@ public class NPlayer : Player {
 			transform.rotation = (Quaternion)stream.ReceiveNext();
 		}
 	}
+	
+	[RPC]
+	public void NetworkOnHit(PhotonMessageInfo info)
+	{
+		//if (photonView.viewID == info.photonView) {
+
+		//}
+	}
+
+	
+	
+	[RPC]
+	void playScores(int amount)
+	{
+
+	}
+
+	[RPC]
+	void playerPickup(PhotonPlayer player, Collectable collectable)
+	{
+		if (player.ID == PhotonNetwork.player.ID) {
+			carryPoints += collectable.value;
+			Debug.Log("Player " + player.ID + " has picked up " + collectable.value + " coins");
+		}
+	}
 }
